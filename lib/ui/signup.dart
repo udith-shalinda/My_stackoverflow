@@ -1,19 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:my_stackoverflow/ui/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
 
 
 
-class Login extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference databaseReference;
@@ -30,7 +29,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    databaseReference = database.reference().child("user");
+    //databaseReference = database.reference().child("user");
   }
 
   @override
@@ -40,24 +39,12 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(56, 66, 86, 1),
         title: new Text(
-            "Login",
-            style: TextStyle(
-              fontSize: 25,
-            ),
+          "Sign Up",
+          style: TextStyle(
+            fontSize: 25,
+          ),
         ),
         centerTitle: true,
-        actions: <Widget>[
-          new IconButton(
-              icon: Icon(Icons.person_add),
-              onPressed: (){
-                var router = new MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return new SignUp();
-                    });
-                Navigator.of(context).push(router);
-
-              })
-        ],
       ),
       body: new Stack(
         children: <Widget>[
@@ -136,12 +123,12 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 RaisedButton(
-                  onPressed: loginButton ,
+                  onPressed: signupButton ,
                   color: Color.fromRGBO(52, 66, 86, 1),
                   child: Text(
                     'Login',
                     style: TextStyle(
-                        fontSize: 20,
+                      fontSize: 20,
                     ),
                   ),
                   textColor: Colors.white70,
@@ -154,20 +141,20 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void loginButton(){
+  void signupButton(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      signInWithCredentials(_email, _formpassword);
+      signupwithEmail(_email, _formpassword);
     }
   }
 
-  void signInWithCredentials(String email, String password) async {
+  void signupwithEmail(String email, String password) async {
     FirebaseUser user;
     final prefs = await SharedPreferences.getInstance();   //save username
     try{
-      user = await _firebaseAuth.signInWithEmailAndPassword(
-          email: _username.text,
-          password: _password.text
+      user = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email,
+          password: password
       );
     }catch(e){
       print(e.toString());
