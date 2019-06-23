@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/ui/userdetailsform.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -26,7 +27,12 @@ class _HomeState extends State<Home> {
                       ),
                       Text("sfsfss"),
                       IconButton(
-                        icon: Icon(Icons.library_add),
+                        icon: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 34,
+                        ),
+                        onPressed: editProfile,
                       )
                     ],
                   ),
@@ -46,5 +52,13 @@ class _HomeState extends State<Home> {
                 child: Text("sfsfsfs"),
               ),
     );
+  }
+
+  void editProfile(){
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new UserDetailsForm();
+        });
+    Navigator.of(context).push(router);
   }
 }

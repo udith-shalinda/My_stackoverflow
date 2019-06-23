@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/modle/user.dart';
+import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
@@ -19,9 +21,6 @@ class _SignUpState extends State<SignUp> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   bool incorrectPassword  = false;
-  var _username = new TextEditingController();
-  var _password = new TextEditingController();
-
   var _formKey = GlobalKey<FormState>();
   String _email;
   String _formpassword;
@@ -29,7 +28,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
-    //databaseReference = database.reference().child("user");
+
   }
 
   @override
@@ -67,7 +66,6 @@ class _SignUpState extends State<SignUp> {
                       color: Colors.white,
                       fontSize: 21,
                     ),
-                    controller: _username,
                     validator: (value){
                       String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                       RegExp regExp = new RegExp(p);
@@ -100,7 +98,6 @@ class _SignUpState extends State<SignUp> {
                       fontSize: 21,
                     ),
                     obscureText: true,
-                    controller: _password,
                     validator: (value){
 
                       if(value.length == 0){
@@ -160,11 +157,12 @@ class _SignUpState extends State<SignUp> {
       print(e.toString());
     }finally{
       if(user != null){
+        createUser();
         incorrectPassword = false;
         prefs.setString("userEmail", _email);
         var router = new MaterialPageRoute(
             builder: (BuildContext context){
-              return new Home();
+              return new UserDetailsForm();
             });
         Navigator.of(context).push(router);
       }else{
@@ -174,5 +172,10 @@ class _SignUpState extends State<SignUp> {
         });
       }
     }
+  }
+  void createUser(){
+    databaseReference = database.reference().child("userDetails");
+    User user = new User("",_email,"","");
+    databaseReference.push().set(user.toJson());
   }
 }

@@ -20,9 +20,6 @@ class _LoginState extends State<Login> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   bool incorrectPassword  = false;
-  var _username = new TextEditingController();
-  var _password = new TextEditingController();
-
   var _formKey = GlobalKey<FormState>();
   String _email;
   String _formpassword;
@@ -49,14 +46,8 @@ class _LoginState extends State<Login> {
         actions: <Widget>[
           new IconButton(
               icon: Icon(Icons.person_add),
-              onPressed: (){
-                var router = new MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return new SignUp();
-                    });
-                Navigator.of(context).push(router);
-
-              })
+              onPressed: signUp,
+              )
         ],
       ),
       body: new Stack(
@@ -80,7 +71,6 @@ class _LoginState extends State<Login> {
                       color: Colors.white,
                       fontSize: 16,
                     ),
-                    controller: _username,
                     validator: (value){
                       String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                       RegExp regExp = new RegExp(p);
@@ -112,7 +102,6 @@ class _LoginState extends State<Login> {
                       fontSize: 16,
                     ),
                     obscureText: true,
-                    controller: _password,
                     validator: (value){
 
                       if(value.length == 0){
@@ -153,6 +142,14 @@ class _LoginState extends State<Login> {
     );
   }
 
+  void signUp(){
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new SignUp();
+        });
+    Navigator.of(context).push(router);
+  }
+
   void loginButton(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
@@ -165,8 +162,8 @@ class _LoginState extends State<Login> {
     final prefs = await SharedPreferences.getInstance();   //save username
     try{
       user = await _firebaseAuth.signInWithEmailAndPassword(
-          email: _username.text,
-          password: _password.text
+          email: email,
+          password: password
       );
     }catch(e){
       print(e.toString());
