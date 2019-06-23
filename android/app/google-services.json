@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "311201439378",
+    "firebase_url": "https://mystackoverfolw.firebaseio.com",
+    "project_id": "mystackoverfolw",
+    "storage_bucket": "mystackoverfolw.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311201439378:android:93f7fd5f3a779476",
+        "android_client_info": {
+          "package_name": "com.example.my_stackoverflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311201439378-ue8rb6u26knu8656hqsqklke8ihsbfti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_stackoverflow",
+            "certificate_hash": "27917f1a5dbde3ab36a779c0b608d86e7df29615"
+          }
+        },
+        {
+          "client_id": "311201439378-0r765l6s4c7inbthm4n0hompqffc631r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI-bRYypmLx5da-gfOS8sUy9HqKjNQaj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311201439378-0r765l6s4c7inbthm4n0hompqffc631r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
