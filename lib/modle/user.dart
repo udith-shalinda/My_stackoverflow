@@ -3,23 +3,26 @@ import 'package:firebase_database/firebase_database.dart';
 class User {
   String key;
   String name;
-  String mobile;
+  String github;
+  String linkin;
   String email;
 
-  User(this.name,this.mobile,this.email);
+  User(this.name,this.email,this.github,this.linkin);
 
   User.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
         name = snapshot.value['name'],
-        mobile = snapshot.value['mobile'],
-        email = snapshot.value['email'];
+        email = snapshot.value['email'],
+        github = snapshot.value['github'],
+        linkin = snapshot.value['linkin'];
 
 
   toJson(){
     return {
       "name" : name,
-      "mobile" :mobile,
-      "email" :email
+      "email" :email,
+      "github" : github,
+      "linkin" : linkin,
     };
   }
 

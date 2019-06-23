@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 21,
+                      fontSize: 16,
                     ),
                     controller: _username,
                     validator: (value){
@@ -99,7 +99,6 @@ class _LoginState extends State<Login> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide(
-                          color: Colors.redAccent,
                         ),
                       ),
                     ),
@@ -110,7 +109,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 21,
+                      fontSize: 16,
                     ),
                     obscureText: true,
                     controller: _password,
