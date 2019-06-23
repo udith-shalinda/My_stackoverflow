@@ -23,9 +23,9 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
   List<User> userList = List();
   String useremail;
   var _formKey = GlobalKey<FormState>();
-  String _username;
-  String _github;
-  String _linkedIn;
+  String _username="ss";
+  String _github="";
+  String _linkedIn="";
 
 
   @override
@@ -227,3 +227,4 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
   }
 }
 
+// details not get updated when load;

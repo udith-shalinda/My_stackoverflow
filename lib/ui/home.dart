@@ -47,6 +47,12 @@ class _HomeState extends State<Home> {
                   fontSize: 25,
                   ),
                 ),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: (){},
+                  ),
+                ],
               ),
               body: Container(
                 child: Text("sfsfsfs"),
