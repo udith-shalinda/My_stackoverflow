@@ -35,9 +35,15 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(52, 66, 86, .7),
       appBar: AppBar(
-        backgroundColor: Colors.greenAccent,
-        title: new Text("Login"),
+        backgroundColor: Color.fromRGBO(56, 66, 86, 1),
+        title: new Text(
+            "Login",
+            style: TextStyle(
+              fontSize: 25,
+            ),
+        ),
         centerTitle: true,
         actions: <Widget>[
           new IconButton(
@@ -69,6 +75,10 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                    ),
                     controller: _username,
                     validator: (value){
                       String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -82,8 +92,14 @@ class _LoginState extends State<Login> {
                     },
                     decoration: InputDecoration(
                       hintText: "Enter the email",
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(
+                          color: Colors.redAccent,
+                        ),
                       ),
                     ),
                   ),
@@ -91,6 +107,10 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: TextFormField(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                    ),
                     obscureText: true,
                     controller: _password,
                     validator: (value){
@@ -104,6 +124,9 @@ class _LoginState extends State<Login> {
                     },
                     decoration: InputDecoration(
                       hintText: "Enter the password",
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                       errorText: incorrectPassword ? "User email or password is incorrect":null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
@@ -113,10 +136,12 @@ class _LoginState extends State<Login> {
                 ),
                 RaisedButton(
                   onPressed: loginButton ,
-                  color: Colors.greenAccent,
+                  color: Color.fromRGBO(52, 66, 86, 1),
                   child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 16.9),
+                    style: TextStyle(
+                        fontSize: 20,
+                    ),
                   ),
                   textColor: Colors.white70,
                 )
