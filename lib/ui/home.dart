@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 
+import 'AddQuestion.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -57,6 +59,13 @@ class _HomeState extends State<Home> {
               body: Container(
                 child: Text("sfsfsfs"),
               ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: addAQuestion,
+                //add a date
+                child: Icon(Icons.add,
+                  color: Colors.pinkAccent,),
+                backgroundColor: Colors.white,
+              ),
     );
   }
 
@@ -64,6 +73,13 @@ class _HomeState extends State<Home> {
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
           return new UserDetailsForm();
+        });
+    Navigator.of(context).push(router);
+  }
+  void addAQuestion(){
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new AddQuestion();
         });
     Navigator.of(context).push(router);
   }
