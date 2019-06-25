@@ -72,7 +72,7 @@ class AddQuestionState extends State<AddQuestion> {
                         createQuestion.question = value;
                       },
                       decoration: InputDecoration(
-                        hintText: "Enter the email",
+                        hintText: "Enter the Question",
                         hintStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -95,14 +95,14 @@ class AddQuestionState extends State<AddQuestion> {
                       validator: (value){
 
                         if(value.length == 0){
-                          return "Password is empty";
+                          return "Description cannot be empty";
                         }
                       },
                       onSaved: (value){
                         createQuestion.description = value;
                       },
                       decoration: InputDecoration(
-                        hintText: "Enter the password",
+                        hintText: "Enter the description",
                         hintStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -117,7 +117,7 @@ class AddQuestionState extends State<AddQuestion> {
                     onPressed: AddQuestionButton ,
                     color: Color.fromRGBO(52, 66, 86, 1),
                     child: Text(
-                      'Login',
+                      'Post',
                       style: TextStyle(
                         fontSize: 20,
                       ),

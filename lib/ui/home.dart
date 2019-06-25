@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 
@@ -9,6 +11,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference databaseReference;
+
+
+  @override
+  void initState() {
+    super.initState();
+    databaseReference = database.reference().child("Questions");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +70,53 @@ class _HomeState extends State<Home> {
                 ],
               ),
               body: Container(
-                child: Text("sfsfsfs"),
+                  child : new ListView(
+                    children: <Widget>[
+                      new Container(
+                        height:  MediaQuery.of(context).size.height-120,
+                        child: new FirebaseAnimatedList(
+                            query: databaseReference,
+                            itemBuilder: (_, DataSnapshot snapshot,Animation<double> animation , int index){
+                              return new Card(
+                                  elevation: 8.0,
+                                  margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                  child: new Container(
+                                    decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: new ListTile(
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding: EdgeInsets.only(right: 12.0),
+                                        decoration: new BoxDecoration(
+                                            border: new Border(
+                                                right: new BorderSide(width: 1.0, color: Colors.white24))),
+                                        child: CircleAvatar(
+                                          radius: 30.0,
+                                          backgroundColor: Colors.white,
+                                          child: new Text(snapshot.value['email'].substring(5,10)),
+                                        ),
+                                      ),
+                                      title:  Text(
+                                        snapshot.value['question'].toString(),
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle:  Text(
+                                            snapshot.value['description'],
+                                            style: TextStyle(color: Colors.white)
+                                      ),
+                                      trailing: new Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
+
+                                      onTap: (){
+
+                                      },
+                                    ),
+                                  )
+                              );
+                            }
+                        ),
+                      ),
+
+                    ],
+                  )
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: addAQuestion,
