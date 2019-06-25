@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 
 import 'AddQuestion.dart';
+import 'giveAnswer.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -172,6 +173,10 @@ class _HomeState extends State<Home> {
   }
   void showQuestion(String key){
     print(key);
-    databaseReference.child(key).child("answer");
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new GiveAnswer(QuestionKey: key,);
+        });
+    Navigator.of(context).push(router);
   }
 }
