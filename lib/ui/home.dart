@@ -81,32 +81,60 @@ class _HomeState extends State<Home> {
                                   elevation: 8.0,
                                   margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                                   child: new Container(
-                                    decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                                    decoration: BoxDecoration(color: Colors.white),
                                     child: new ListTile(
                                       contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding: EdgeInsets.only(right: 12.0),
-                                        decoration: new BoxDecoration(
-                                            border: new Border(
-                                                right: new BorderSide(width: 1.0, color: Colors.white24))),
-                                        child: CircleAvatar(
-                                          radius: 30.0,
-                                          backgroundColor: Colors.white,
-                                          child: new Text(snapshot.value['email'].substring(5,10)),
+//                                      leading: Container(
+//                                        padding: EdgeInsets.only(right: 12.0),
+////                                        decoration: new BoxDecoration(
+////                                            border: new Border(
+////                                                right: new BorderSide(width: 1.0, color: Colors.white24))),
+//                                        child: CircleAvatar(
+//                                          radius: 30.0,
+//                                          backgroundColor: Colors.white,
+//                                          child: new Text(snapshot.value['email'].substring(5,10)),
+//                                        ),
+//                                      ),
+                                      title: Align(
+                                        child: Container(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child:Row(
+                                            children: <Widget>[
+                                              CircleAvatar(
+                                                radius: 30.0,
+                                                backgroundColor: Colors.black,
+                                                child: new Text(snapshot.value['email'].substring(5,10)),
+                                              ),
+                                              Text(
+                                                "   "+snapshot.value['email'].toString(),
+                                                style: TextStyle(color: Colors.black),
+                                              ),
+                                            ],
+                                          )
                                         ),
+                                        alignment: FractionalOffset.topLeft,
                                       ),
-                                      title:  Text(
-                                        snapshot.value['question'].toString(),
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle:  Text(
-                                            snapshot.value['description'],
-                                            style: TextStyle(color: Colors.white)
+                                      subtitle: Container(
+                                        height: 200,
+                                        alignment: FractionalOffset.topLeft,
+                                        padding: EdgeInsets.only(top: 30),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              snapshot.value['question'].toString(),
+                                              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+                                            ),
+                                            Text(
+                                              snapshot.value['question'].toString(),
+                                              style: TextStyle(color: Colors.blueGrey, fontSize: 15),
+                                            ),
+                                          ],
+                                        )
                                       ),
                                       trailing: new Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
 
                                       onTap: (){
-
+                                        showQuestion(snapshot.key);
                                       },
                                     ),
                                   )
@@ -141,5 +169,9 @@ class _HomeState extends State<Home> {
           return new AddQuestion();
         });
     Navigator.of(context).push(router);
+  }
+  void showQuestion(String key){
+    print(key);
+    databaseReference.child(key).child("answer");
   }
 }
