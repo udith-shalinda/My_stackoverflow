@@ -10,7 +10,7 @@ class Question {
   String email;
   String question;
   String description;
-  List<Answer> answer ;
+  String answer ;
 
   Question(this.email,this.question,this.description,this.answer,this.votes);
 

@@ -1,4 +1,6 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/modle/Question.dart';
 
 class GiveAnswer extends StatefulWidget {
 
@@ -12,9 +14,20 @@ class GiveAnswer extends StatefulWidget {
 
 class _GiveAnswerState extends State<GiveAnswer> {
 
+  Question question;
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference databaseReference;
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    databaseReference = database.reference().child("Questions");
+    databaseReference.onChildAdded.listen(setQuestion);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +69,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             child: new Text("sgsfsf"),
                           ),
                           Text(
-                            "   czczczczcz",
+                            "  "+ question.email,
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -68,11 +81,11 @@ class _GiveAnswerState extends State<GiveAnswer> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            "sfsfsfsf",
+                             question.question,
                             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
                           ),
                           Text(
-                            "ssfsfsf",
+                            question.description,
                             style: TextStyle(color: Colors.blueGrey, fontSize: 15),
                           ),
                           Container(    //answers shown here;
@@ -99,6 +112,11 @@ class _GiveAnswerState extends State<GiveAnswer> {
       ),
     );
   }
+
+  void setQuestion(Event event){
+     question = Question.fromSnapshot(event.snapshot);
+  }
+
   Widget answerForm(){
     return Column(
       children: <Widget>[
@@ -115,7 +133,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
           ),
         ),
         RaisedButton(
-          onPressed: (){},
+          onPressed: postAnswer,
           child: Text("post it"),
         ),
       ],
@@ -125,6 +143,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
     setState(() {
       addAnswer = true;
     });
-
+  }
+  void postAnswer(){
+    if(answer.text.length != 0){
+      databaseReference.child(widget.QuestionKey).child("answer").set(answer.text);
+    }
   }
 }
