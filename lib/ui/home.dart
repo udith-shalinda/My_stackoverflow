@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
                   child : new ListView(
                     children: <Widget>[
                       new Container(
-                        height:  MediaQuery.of(context).size.height-120,
+                        height:  MediaQuery.of(context).size.height-50,
                         child: new FirebaseAnimatedList(
                             query: databaseReference,
                             itemBuilder: (_, DataSnapshot snapshot,Animation<double> animation , int index){
