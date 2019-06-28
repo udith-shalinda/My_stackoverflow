@@ -118,14 +118,19 @@ class _HomeState extends State<Home> {
                                       subtitle: Container(
                                         alignment: FractionalOffset.topLeft,
                                         padding: EdgeInsets.only(top: 30),
-                                        child:Row(
+                                        child:Column(
                                           children: <Widget>[
-                                            Flexible(
-                                              child:voteupdown(),
+                                            Row(
+                                              children: <Widget>[
+                                                Flexible(
+                                                  child:voteupdown(snapshot),
+                                                ),
+                                                Flexible(
+                                                  child: QuestionandAnswer(snapshot),
+                                                ),
+                                              ],
                                             ),
-                                            Flexible(
-                                              child: QuestionandAnswer(snapshot),
-                                            ),
+                                            ButtonSet(snapshot),
                                           ],
                                         ),
                                       ),
@@ -153,7 +158,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget voteupdown(){
+  Widget voteupdown(DataSnapshot snapshot){
     return Container(
       child: Column(
         children: <Widget>[
@@ -161,13 +166,23 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
             color: Colors.blueGrey,
-            onPressed: (){},
+            onPressed: (){
+              databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+            },
+          ),
+          Text(
+            snapshot.value['votes'].toString(),
+              style: TextStyle(
+                fontSize: 25
+              ),
           ),
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
             color: Colors.blueGrey,
-            onPressed: (){print("button pressed");},
+            onPressed: (){
+              databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
+            },
           )
         ],
       ),
@@ -190,13 +205,21 @@ class _HomeState extends State<Home> {
         ],
       );
   }
-  Widget ButtonSet(){
+  Widget ButtonSet(DataSnapshot snapshot){
     return Row(
       children: <Widget>[
-        RaisedButton(
-          child: Text("votes"),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors.grey,
+            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+            child: Text("votes :" + snapshot.value['votes'].toString()),
+          ),
         ),
-        RaisedButton(
+        Container(
+          color: Colors.grey,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
           child: Text("Answers"),
         ),
       ],
