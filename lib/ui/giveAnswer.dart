@@ -1,6 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 
 class GiveAnswer extends StatefulWidget {
@@ -21,12 +21,13 @@ class _GiveAnswerState extends State<GiveAnswer> {
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
+  Answer finalAnswer = new Answer("","");
 
 
   @override
   void initState() {
     super.initState();
-    question = new Question("fsfs", "", "", "",0);
+    question = new Question("fsfs", "", "", null,0);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
   }
@@ -71,7 +72,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             child: new Text("sgsfsf"),
                           ),
                           Text(
-                            "  ",
+                            "  " + question.email,
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -116,9 +117,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   void setQuestion(Event event){
-    setState(() {
-      question = Question.fromSnapshot(event.snapshot);
-    });
+    if(event.snapshot.key == widget.QuestionKey){
+      setState(() {
+        question = Question.fromSnapshot(event.snapshot);
+      });
+    }
+
   }
 
   Widget answerForm(){
@@ -131,7 +135,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
           ),
         ),
         TextField(
-          controller: answer,
+          controller: answerDescription,
           decoration: new InputDecoration(
               labelText: "Enter your answer"
           ),
@@ -150,7 +154,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   void postAnswer(){
     if(answer.text.length != 0){
-      databaseReference.child(widget.QuestionKey).child("answer").set(answer.text);
+      finalAnswer.answer = answer.text;
+      finalAnswer.comment = answerDescription.text;
+      databaseReference.child(widget.QuestionKey).child("answer").push().set(finalAnswer.toJson());
     }
   }
 }
