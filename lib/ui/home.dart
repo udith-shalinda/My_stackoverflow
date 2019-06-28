@@ -116,23 +116,20 @@ class _HomeState extends State<Home> {
                                         alignment: FractionalOffset.topLeft,
                                       ),
                                       subtitle: Container(
-                                        height: 200,
                                         alignment: FractionalOffset.topLeft,
                                         padding: EdgeInsets.only(top: 30),
-                                        child: Column(
+                                        child:Row(
                                           children: <Widget>[
-                                            Text(
-                                              snapshot.value['question'].toString(),
-                                              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+                                            Flexible(
+                                              child:voteupdown(),
                                             ),
-                                            Text(
-                                              snapshot.value['question'].toString(),
-                                              style: TextStyle(color: Colors.blueGrey, fontSize: 15),
+                                            Flexible(
+                                              child: QuestionandAnswer(snapshot),
                                             ),
                                           ],
-                                        )
+                                        ),
                                       ),
-                                      trailing: new Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0),
+                                      //trailing: voteupdown(),
 
                                       onTap: (){
                                         showQuestion(snapshot.key);
@@ -143,7 +140,6 @@ class _HomeState extends State<Home> {
                             }
                         ),
                       ),
-
                     ],
                   )
               ),
@@ -154,6 +150,56 @@ class _HomeState extends State<Home> {
                   color: Colors.pinkAccent,),
                 backgroundColor: Colors.white,
               ),
+    );
+  }
+
+  Widget voteupdown(){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_up),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_down),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){print("button pressed");},
+          )
+        ],
+      ),
+    );
+  }
+  Widget QuestionandAnswer(DataSnapshot snapshot){
+      return Column(
+        children: <Widget>[
+          Container(
+            child: Text(
+              snapshot.value['question'].toString(),
+              overflow: TextOverflow.fade,
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+            ),
+          ),
+          Text(
+            snapshot.value['question'].toString(),
+            style: TextStyle(color: Colors.blueGrey, fontSize: 15),
+          ),
+        ],
+      );
+  }
+  Widget ButtonSet(){
+    return Row(
+      children: <Widget>[
+        RaisedButton(
+          child: Text("votes"),
+        ),
+        RaisedButton(
+          child: Text("Answers"),
+        ),
+      ],
     );
   }
 

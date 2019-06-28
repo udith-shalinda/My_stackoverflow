@@ -81,7 +81,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                       )
                   ),
                   subtitle: Container(
-                      alignment: FractionalOffset.topLeft,
+                      alignment: FractionalOffset.topRight,
                       padding: EdgeInsets.only(top: 30),
                       child: Column(
                         children: <Widget>[
@@ -126,6 +126,26 @@ class _GiveAnswerState extends State<GiveAnswer> {
   void setAnswers(Event event){
     answerlist.add(Answer.fromSnapshot(event.snapshot));
     print("list count is ");
+  }
+  Widget voteupdown(){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_up),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){},
+          ),
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_down),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){print("button pressed");},
+          )
+        ],
+      ),
+    );
   }
 
   Widget displayAnswer(){
