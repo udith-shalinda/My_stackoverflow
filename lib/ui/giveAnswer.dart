@@ -96,13 +96,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             question.description,
                             style: TextStyle(color: Colors.blueGrey, fontSize: 15),
                           ),
-                          Container(    //answers shown here;
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                            ),
-                            child: displayAnswer(),
-                          ),
+                          displayAnswer(),
                           Container(
                             child: addAnswer ? answerForm() : RaisedButton(
                                     child: Text("Add an answer"),
@@ -135,12 +129,21 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   Widget displayAnswer(){
-    return ListView.builder
-      (
-        itemCount: answerlist.length,
-        itemBuilder: (BuildContext ctxt, int index) {
-          return new Text(answerlist[index].answer);
-        }
+    if(answerlist.length == 0){
+      return Container();
+    }
+    return Container(    //answers shown here;
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+      ),
+      child: ListView.builder
+        (
+          itemCount: answerlist.length,
+          itemBuilder: (BuildContext ctxt, int index) {
+            return new Text(answerlist[index].answer);
+          }
+      )
     );
   }
 
@@ -177,5 +180,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
       finalAnswer.comment = answerDescription.text;
       databaseReference.child(widget.QuestionKey).child("answer").push().set(finalAnswer.toJson());
     }
+    setState(() {
+      addAnswer = false;
+    });
   }
 }
