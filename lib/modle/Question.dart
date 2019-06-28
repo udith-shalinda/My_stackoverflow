@@ -10,7 +10,7 @@ class Question {
   String email;
   String question;
   String description;
-  Answer answer ;
+  List<Answer> answer ;
 
   Question(this.email,this.question,this.description,this.answer,this.votes);
 
@@ -19,7 +19,6 @@ class Question {
         email = snapshot.value['email'],
         question = snapshot.value['question'],
         description = snapshot.value['description'],
-        answer = snapshot.value['answer'],
         votes = snapshot.value['votes'];
 
 

@@ -22,6 +22,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
   Answer finalAnswer = new Answer("","");
+  List<Answer> answerlist = new List();
 
 
   @override
@@ -30,6 +31,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
     question = new Question("fsfs", "", "", null,0);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
+    databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
   }
 
   @override
@@ -83,10 +85,13 @@ class _GiveAnswerState extends State<GiveAnswer> {
                       padding: EdgeInsets.only(top: 30),
                       child: Column(
                         children: <Widget>[
-                          Text(
-                             question.question,
-                            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+                          Container(
+                            child: Text(
+                              question.question,
+                              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+                            ),
                           ),
+
                           Text(
                             question.description,
                             style: TextStyle(color: Colors.blueGrey, fontSize: 15),
@@ -96,6 +101,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             decoration: BoxDecoration(
                               color: Colors.grey,
                             ),
+                            child: displayAnswer(),
                           ),
                           Container(
                             child: addAnswer ? answerForm() : RaisedButton(
@@ -122,7 +128,20 @@ class _GiveAnswerState extends State<GiveAnswer> {
         question = Question.fromSnapshot(event.snapshot);
       });
     }
+  }
+  void setAnswers(Event event){
+    answerlist.add(Answer.fromSnapshot(event.snapshot));
+    print("list count is ");
+  }
 
+  Widget displayAnswer(){
+    return ListView.builder
+      (
+        itemCount: answerlist.length,
+        itemBuilder: (BuildContext ctxt, int index) {
+          return new Text(answerlist[index].answer);
+        }
+    );
   }
 
   Widget answerForm(){
