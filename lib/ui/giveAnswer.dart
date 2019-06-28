@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 
@@ -25,6 +26,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   @override
   void initState() {
     super.initState();
+    question = new Question("fsfs", "", "", "",0);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
   }
@@ -69,7 +71,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             child: new Text("sgsfsf"),
                           ),
                           Text(
-                            "  "+ question.email,
+                            "  ",
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -114,7 +116,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   void setQuestion(Event event){
-     question = Question.fromSnapshot(event.snapshot);
+    setState(() {
+      question = Question.fromSnapshot(event.snapshot);
+    });
   }
 
   Widget answerForm(){
