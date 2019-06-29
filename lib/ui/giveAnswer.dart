@@ -124,8 +124,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
     }
   }
   void setAnswers(Event event){
-    answerlist.add(Answer.fromSnapshot(event.snapshot));
-    print("list count is ");
+    setState(() {
+      answerlist.add(Answer.fromSnapshot(event.snapshot));
+    });
   }
   Widget voteupdown(){
     return Container(
