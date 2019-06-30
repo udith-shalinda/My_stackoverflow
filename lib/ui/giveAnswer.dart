@@ -86,16 +86,29 @@ class _GiveAnswerState extends State<GiveAnswer> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            child: Text(
-                              question.question,
-                              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 25),
+                            child: Row(
+                              children: <Widget>[
+                                  Flexible(
+                                    child: voteupdown(),
+                                  ),
+                                  Flexible(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          question.question,
+                                          style: TextStyle(color: Colors.blueAccent, fontSize: 35),
+                                        ),
+                                        Text(
+                                          question.description,
+                                          style: TextStyle(color: Colors.blueGrey, fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
 
-                          Text(
-                            question.description,
-                            style: TextStyle(color: Colors.blueGrey, fontSize: 15),
-                          ),
                           displayAnswer(),
                           Container(
                             child: addAnswer ? answerForm() : RaisedButton(
@@ -115,6 +128,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
       ),
     );
   }
+
+
+
 
   void setQuestion(Event event){
     if(event.snapshot.key == widget.QuestionKey){
@@ -138,6 +154,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
             color: Colors.blueGrey,
             onPressed: (){},
           ),
+          Text(
+            "0",
+            style: TextStyle(
+                fontSize: 25
+            ),
+          ),
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
@@ -154,7 +176,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       return Container();
     }
     return Container(    //answers shown here;
-      height: 100,
+      height: 500,
       decoration: BoxDecoration(
         color: Colors.grey,
       ),
@@ -162,7 +184,21 @@ class _GiveAnswerState extends State<GiveAnswer> {
         (
           itemCount: answerlist.length,
           itemBuilder: (BuildContext ctxt, int index) {
-            return new Text(answerlist[index].answer);
+            return Row(
+              children: <Widget>[
+                Flexible(
+                  child: voteupdown(),
+                ),
+                Flexible(
+                  child: Column(
+                    children: <Widget>[
+                      new Text(answerlist[index].answer),
+                      new Text(answerlist[index].comment)
+                    ],
+                  ),
+                )
+              ],
+            );
           }
       )
     );
