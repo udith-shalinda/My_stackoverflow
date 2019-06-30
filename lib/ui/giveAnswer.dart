@@ -21,7 +21,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
-  Answer finalAnswer = new Answer("","");
+  Answer finalAnswer = new Answer("","",0);
   List<Answer> answerlist = new List();
 
 
@@ -89,7 +89,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             child: Row(
                               children: <Widget>[
                                   Flexible(
-                                    child: voteupdown(),
+                                    child: voteupdownQuestion(question.key,question.votes),
                                   ),
                                   Flexible(
                                     child: Column(
@@ -144,7 +144,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       answerlist.add(Answer.fromSnapshot(event.snapshot));
     });
   }
-  Widget voteupdown(){
+  Widget voteupdownQuestion(String key,int votes){
     return Container(
       child: Column(
         children: <Widget>[
@@ -152,10 +152,15 @@ class _GiveAnswerState extends State<GiveAnswer> {
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
             color: Colors.blueGrey,
-            onPressed: (){},
+            onPressed: (){
+                databaseReference.child(key).child('votes').set(votes++);
+                setState(() {
+                  question.votes++;
+                });
+            },
           ),
           Text(
-            "0",
+            question.votes.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
@@ -164,7 +169,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
             color: Colors.blueGrey,
-            onPressed: (){print("button pressed");},
+            onPressed: (){
+              databaseReference.child(key).child('votes').set(votes--);
+              setState(() {
+                question.votes--;
+              });
+              },
           )
         ],
       ),
@@ -176,7 +186,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       return Container();
     }
     return Container(    //answers shown here;
-      height: 500,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.grey,
       ),
@@ -187,13 +197,25 @@ class _GiveAnswerState extends State<GiveAnswer> {
             return Row(
               children: <Widget>[
                 Flexible(
-                  child: voteupdown(),
+                  child: voteupdownQuestion(answerlist[index].key,answerlist[index].votes),
                 ),
                 Flexible(
                   child: Column(
                     children: <Widget>[
-                      new Text(answerlist[index].answer),
-                      new Text(answerlist[index].comment)
+                      new Text(
+                          answerlist[index].answer,
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontSize: 22,
+                          ),
+                      ),
+                      new Text(
+                          answerlist[index].comment,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                        ),
+                      ),
                     ],
                   ),
                 )
