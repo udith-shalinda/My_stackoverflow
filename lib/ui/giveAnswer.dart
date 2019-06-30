@@ -181,6 +181,43 @@ class _GiveAnswerState extends State<GiveAnswer> {
     );
   }
 
+  Widget voteupdownAnswers(int answerIndex){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_up),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){
+              setState(() {
+                databaseReference.child(widget.QuestionKey).child("answer")
+                    .child(answerlist[answerIndex].key).child("votes").set(answerlist[answerIndex].votes++);
+              });
+            },
+          ),
+          Text(
+            answerlist[answerIndex].votes.toString(),
+            style: TextStyle(
+                fontSize: 25
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_down),
+            iconSize: 50,
+            color: Colors.blueGrey,
+            onPressed: (){
+              setState(() {
+                databaseReference.child(widget.QuestionKey).child("answer")
+                    .child(answerlist[answerIndex].key).child("votes").set(answerlist[answerIndex].votes--);
+              });
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   Widget displayAnswer(){
     if(answerlist.length == 0){
       return Container();
@@ -197,7 +234,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             return Row(
               children: <Widget>[
                 Flexible(
-                  child: voteupdownQuestion(answerlist[index].key,answerlist[index].votes),
+                  child: voteupdownAnswers(index),
                 ),
                 Flexible(
                   child: Column(
