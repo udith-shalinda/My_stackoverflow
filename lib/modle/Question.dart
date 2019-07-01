@@ -10,16 +10,18 @@ class Question {
   String email;
   String question;
   String description;
-  List<Answer> answer ;
+  List<Answer> answer;
+  int answercount;
 
-  Question(this.email,this.question,this.description,this.answer,this.votes);
+  Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount);
 
   Question.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
         email = snapshot.value['email'],
         question = snapshot.value['question'],
         description = snapshot.value['description'],
-        votes = snapshot.value['votes'];
+        votes = snapshot.value['votes'],
+        answercount = snapshot.value['answercount'];
 
 
   toJson(){
@@ -28,7 +30,8 @@ class Question {
       "question" : question,
       "description" :description,
       "answer" : answer,
-      "votes" : votes
+      "votes" : votes,
+      "answercount" : answercount
     };
   }
 

@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 
 import 'AddQuestion.dart';
@@ -15,6 +16,7 @@ class _HomeState extends State<Home> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference databaseReference;
+  List<Answer> answerlist;
 
 
   @override
@@ -220,7 +222,7 @@ class _HomeState extends State<Home> {
         Container(
           color: Colors.grey,
           padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
-          child: Text("Answers"),
+          child: Text("Answers : "+ snapshot.value['answercount'].toString()),
         ),
       ],
     );

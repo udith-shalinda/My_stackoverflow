@@ -28,7 +28,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   @override
   void initState() {
     super.initState();
-    question = new Question("fsfs", "", "", null,0);
+    question = new Question("fsfs", "", "", null,0,0);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
@@ -292,12 +292,14 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   void postAnswer(){
     if(answer.text.length != 0){
+      setState(() {
+        addAnswer = false;
+      });
+
       finalAnswer.answer = answer.text;
       finalAnswer.comment = answerDescription.text;
       databaseReference.child(widget.QuestionKey).child("answer").push().set(finalAnswer.toJson());
+      databaseReference.child(widget.QuestionKey).child('answercount').set(++question.answercount);
     }
-    setState(() {
-      addAnswer = false;
-    });
   }
 }

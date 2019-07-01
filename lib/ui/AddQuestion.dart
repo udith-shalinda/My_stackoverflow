@@ -26,7 +26,7 @@ class AddQuestionState extends State<AddQuestion> {
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
     print(email);
-    createQuestion = new Question("fsfs", "", "", null,0);
+    createQuestion = new Question("fsfs", "", "", null,0,0);
   }
 
   @override
