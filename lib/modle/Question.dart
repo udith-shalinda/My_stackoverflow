@@ -12,8 +12,9 @@ class Question {
   String description;
   List<Answer> answer;
   int answercount;
+  List<String> questionVotes;
 
-  Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount);
+  Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount,this.questionVotes);
 
   Question.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
@@ -31,7 +32,8 @@ class Question {
       "description" :description,
       "answer" : answer,
       "votes" : votes,
-      "answercount" : answercount
+      "answercount" : answercount,
+      "questionVotes" : questionVotes
     };
   }
 

@@ -23,12 +23,13 @@ class _GiveAnswerState extends State<GiveAnswer> {
   var answerDescription = new TextEditingController();
   Answer finalAnswer = new Answer("","",0);
   List<Answer> answerlist = new List();
+  DataSnapshot questionSnapshot;
 
 
   @override
   void initState() {
     super.initState();
-    question = new Question("fsfs", "", "", null,0,0);
+    question = new Question("fsfs", "", "", null,0,0,null);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
@@ -137,6 +138,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       setState(() {
         question = Question.fromSnapshot(event.snapshot);
       });
+      questionSnapshot = event.snapshot;
     }
   }
   void setAnswers(Event event){
@@ -160,7 +162,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
             },
           ),
           Text(
-            question.votes.toString(),
+            (questionSnapshot != null) ?
+            questionSnapshot.value['questionVotes'].length.toString() : "0",
             style: TextStyle(
                 fontSize: 25
             ),

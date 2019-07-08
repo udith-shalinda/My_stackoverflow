@@ -2,10 +2,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
+import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AddQuestion.dart';
 import 'giveAnswer.dart';
+import 'login.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,13 +18,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
-  DatabaseReference databaseReference;
+  DatabaseReference databaseReference,databaseReferenceTwo;
   List<Answer> answerlist;
-
+  String email;
 
   @override
   void initState() {
     super.initState();
+    getSharedPreference();
     databaseReference = database.reference().child("Questions");
   }
 
@@ -128,11 +132,11 @@ class _HomeState extends State<Home> {
                                                   child:voteupdown(snapshot),
                                                 ),
                                                 Flexible(
-                                                  child: QuestionandAnswer(snapshot),
+                                                  child: questionandAnswer(snapshot),
                                                 ),
                                               ],
                                             ),
-                                            ButtonSet(snapshot),
+                                            buttonSet(snapshot),
                                           ],
                                         ),
                                       ),
@@ -160,6 +164,19 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void getSharedPreference() async{
+    final prefs = await SharedPreferences.getInstance();   //save username
+    if(prefs.getString('userEmail') == null){
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+            (Route<dynamic> route) => false,
+      );
+    }else{
+      email =  prefs.getString('userEmail');
+    }
+  }
+
   Widget voteupdown(DataSnapshot snapshot){
     return Container(
       child: Column(
@@ -169,11 +186,21 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+              List<String> list = new List();
+              if(snapshot.value['questionVotes'] != null){
+                for(String voteEmail in snapshot.value['questionVotes']){
+                  list.add(voteEmail);
+                }
+              }
+              list.add(email);
+              databaseReference.child(snapshot.key).child('questionVotes').set(list);
               databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+              print("done");
             },
           ),
           Text(
-            snapshot.value['votes'].toString(),
+            (snapshot.value['questionVotes'] != null) ?
+            snapshot.value['questionVotes'].length.toString() : "0",
               style: TextStyle(
                 fontSize: 25
               ),
@@ -190,7 +217,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  Widget QuestionandAnswer(DataSnapshot snapshot){
+  Widget questionandAnswer(DataSnapshot snapshot){
       return Column(
         children: <Widget>[
           Container(
@@ -207,7 +234,8 @@ class _HomeState extends State<Home> {
         ],
       );
   }
-  Widget ButtonSet(DataSnapshot snapshot){
+  
+  Widget buttonSet(DataSnapshot snapshot){
     return Row(
       children: <Widget>[
         Padding(
@@ -249,5 +277,9 @@ class _HomeState extends State<Home> {
           return new GiveAnswer(QuestionKey: key,);
         });
     Navigator.of(context).push(router);
+  }
+
+  void votingUp(DataSnapshot snapshot){
+
   }
 }

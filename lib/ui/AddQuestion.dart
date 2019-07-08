@@ -4,6 +4,7 @@ import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home.dart';
 import 'login.dart';
 
 class AddQuestion extends StatefulWidget {
@@ -25,7 +26,7 @@ class AddQuestionState extends State<AddQuestion> {
     super.initState();
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
-    createQuestion = new Question("fsfs", "", "", null,0,0);
+    createQuestion = new Question("fsfs", "", "", null,0,0,null);
   }
 
   @override
@@ -155,5 +156,10 @@ class AddQuestionState extends State<AddQuestion> {
 
   void uploadQuestion(){
     databaseReference.push().set(createQuestion.toJson());
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new Home();
+        });
+    Navigator.of(context).push(router);
   }
 }
