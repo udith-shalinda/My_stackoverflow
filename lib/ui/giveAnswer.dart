@@ -2,6 +2,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login.dart';
 
 class GiveAnswer extends StatefulWidget {
 
@@ -23,16 +26,19 @@ class _GiveAnswerState extends State<GiveAnswer> {
   var answerDescription = new TextEditingController();
   Answer finalAnswer = new Answer("","",0);
   List<Answer> answerlist = new List();
-  DataSnapshot questionSnapshot;
+  List<String> questionVotes = new List();
+  String email;
 
 
   @override
   void initState() {
     super.initState();
+    getSharedPreference();
     question = new Question("fsfs", "", "", null,0,0,null);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
+    
   }
 
   @override
@@ -131,14 +137,30 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
 
-
+  void getSharedPreference() async{
+    final prefs = await SharedPreferences.getInstance();   //save username
+    if(prefs.getString('userEmail') == null){
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+            (Route<dynamic> route) => false,
+      );
+    }else{
+      email =  prefs.getString('userEmail');
+    }
+  }
 
   void setQuestion(Event event){
     if(event.snapshot.key == widget.QuestionKey){
       setState(() {
         question = Question.fromSnapshot(event.snapshot);
+        
+        if(event.snapshot.value['questionVotes'] != null){
+          for(String votedUser in event.snapshot.value['questionVotes']){
+            questionVotes.add(votedUser);
+          }
+        }
       });
-      questionSnapshot = event.snapshot;
     }
   }
   void setAnswers(Event event){
@@ -146,6 +168,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       answerlist.add(Answer.fromSnapshot(event.snapshot));
     });
   }
+  
   Widget voteupdownQuestion(String key,int votes){
     return Container(
       child: Column(
@@ -155,6 +178,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+                questionVotes.add(email);
+                databaseReference.child(key).child('questionVotes').set(questionVotes);
                 databaseReference.child(key).child('votes').set(votes++);
                 setState(() {
                   question.votes++;
@@ -162,8 +187,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             },
           ),
           Text(
-            (questionSnapshot != null) ?
-            questionSnapshot.value['questionVotes'].length.toString() : "0",
+            questionVotes.length.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
