@@ -29,8 +29,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
   List<Answer> answerList = new List();
   List<Votes> voteList = new List();
   String email;
-  bool upVoted= false;
-  bool downVoted = false;
+  String upVoted= "";
+  String downVoted = "";
 
 
   @override
@@ -42,7 +42,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
     databaseReference.child(widget.QuestionKey).child("questionVotes").onChildAdded.listen(setVotes);
-    
+    databaseReference.child(widget.QuestionKey).child("questionVotes").onChildChanged.listen(resetVotes);
   }
 
   @override
@@ -167,18 +167,21 @@ class _GiveAnswerState extends State<GiveAnswer> {
     });
   }
   void setVotes(Event event){
-    setState(() {
       Votes oneVote = Votes.fromSnapshot(event.snapshot);
       voteList.add(oneVote);
       if(oneVote.userEmail == email){
           if(oneVote.updown == 1){
-            upVoted = true;
+            upVoted = oneVote.key;
           }else if(oneVote.updown == -1){
-            downVoted = true;
+            downVoted = oneVote.key;
           }
         }
+  }
+  void resetVotes(Event event){
+    Votes oneVote = Votes.fromSnapshot(event.snapshot);
+    setState(() {
+      voteList.remove(oneVote);
     });
-
   }
   
   Widget voteupdownQuestion(String key,int votes){
@@ -188,15 +191,15 @@ class _GiveAnswerState extends State<GiveAnswer> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: upVoted ? Colors.greenAccent: Colors.blueGrey,
+            color: upVoted != "" ? Colors.orange: Colors.blueGrey,
             onPressed: (){
               Votes newVote = new Votes(1, email);
               setState(() {
-                databaseReference.child(key).child('questionVotes').push().set(newVote.toJson());
-              });
-              databaseReference.child(key).child('votes').set(votes++);
-              setState(() {
-                question.votes++;
+                if(upVoted == ""){
+                  databaseReference.child(key).child('questionVotes').push().set(newVote.toJson());
+                  databaseReference.child(key).child('votes').set(votes++);
+                  question.votes++;
+                }
               });
             },
           ),
@@ -209,8 +212,14 @@ class _GiveAnswerState extends State<GiveAnswer> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color: downVoted != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
+              if(upVoted != ""){
+                databaseReference.child(key).child("questionVotes").child(upVoted).remove();
+              }else if(downVoted == ""){
+                Votes vote = new Votes(-1, email);
+                databaseReference.child(key).child("questionVotes").push().set(vote.toJson());
+              }
               databaseReference.child(key).child('votes').set(votes--);
               setState(() {
                 question.votes--;

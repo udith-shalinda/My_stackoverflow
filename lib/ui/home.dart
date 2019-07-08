@@ -21,6 +21,8 @@ class _HomeState extends State<Home> {
   DatabaseReference databaseReference,databaseReferenceTwo;
   List<Answer> answerlist;
   String email;
+  bool upVoted = false;
+  bool downVoted = false;
 
   @override
   void initState() {
@@ -178,24 +180,26 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
-    bool upVoted = false;
-    bool downVoted = false;
     int totalVotes = 0;
     List<Votes> voteList = new List();
     databaseReference.child(snapshot.key).child('questionVotes').once().then((dataSnapshot){
-      Votes vote = Votes.fromSnapshot(dataSnapshot);
-      voteList.add(vote);
-      if(vote.userEmail == email){
-        setState(() {
-          if(vote.updown == 1){
-            totalVotes++;
-            print(vote.userEmail.toString());
-            upVoted = true;
-          }else if(vote.updown == -1){
-            downVoted = true;
-            totalVotes--;
-          }
-        });
+      print(dataSnapshot.value);
+      if(dataSnapshot.value != null){
+        Votes vote = Votes.fromSnapshot(dataSnapshot);
+        voteList.add(vote);
+        if(vote.userEmail == email){
+          setState(() {
+            if(vote.updown == 1){
+              totalVotes++;
+              setState(() {
+                upVoted = true;
+              });
+            }else if(vote.updown == -1){
+              downVoted = true;
+              totalVotes--;
+            }
+          });
+        }
       }
     });
     return Container(
@@ -210,6 +214,7 @@ class _HomeState extends State<Home> {
               setState(() {
                 databaseReference.child(snapshot.key).child('questionVotes').push().set(votes.toJson());
                 databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+                upVoted = true;
               });
               print("done");
             },
