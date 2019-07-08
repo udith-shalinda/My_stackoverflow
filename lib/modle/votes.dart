@@ -1,21 +1,21 @@
 import 'package:firebase_database/firebase_database.dart';
 
-class votes {
+class Votes {
   String key;
-  String questionKey;
-  List<String> userEmail;
+  String userEmail;
+  int updown;
 
-  votes(this.questionKey,this.userEmail);
+  Votes(this.updown,this.userEmail);
 
-  votes.fromSnapshot(DataSnapshot snapshot):
+  Votes.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
-        questionKey = snapshot.value['questionKey'],
+        updown = snapshot.value['updown'],
         userEmail = snapshot.value['userEmail'];
 
 
   toJson(){
     return {
-      "questionKey" : questionKey,
+      "updown" : updown,
       "userEmail" :userEmail,
     };
   }

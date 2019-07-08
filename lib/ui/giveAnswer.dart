@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
+import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
@@ -25,9 +26,11 @@ class _GiveAnswerState extends State<GiveAnswer> {
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
   Answer finalAnswer = new Answer("","",0);
-  List<Answer> answerlist = new List();
-  List<String> questionVotes = new List();
+  List<Answer> answerList = new List();
+  List<Votes> voteList = new List();
   String email;
+  bool upVoted= false;
+  bool downVoted = false;
 
 
   @override
@@ -38,6 +41,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
+    databaseReference.child(widget.QuestionKey).child("questionVotes").onChildAdded.listen(setVotes);
     
   }
 
@@ -154,19 +158,27 @@ class _GiveAnswerState extends State<GiveAnswer> {
     if(event.snapshot.key == widget.QuestionKey){
       setState(() {
         question = Question.fromSnapshot(event.snapshot);
-        
-        if(event.snapshot.value['questionVotes'] != null){
-          for(String votedUser in event.snapshot.value['questionVotes']){
-            questionVotes.add(votedUser);
-          }
-        }
       });
     }
   }
   void setAnswers(Event event){
     setState(() {
-      answerlist.add(Answer.fromSnapshot(event.snapshot));
+      answerList.add(Answer.fromSnapshot(event.snapshot));
     });
+  }
+  void setVotes(Event event){
+    setState(() {
+      Votes oneVote = Votes.fromSnapshot(event.snapshot);
+      voteList.add(oneVote);
+      if(oneVote.userEmail == email){
+          if(oneVote.updown == 1){
+            upVoted = true;
+          }else if(oneVote.updown == -1){
+            downVoted = true;
+          }
+        }
+    });
+
   }
   
   Widget voteupdownQuestion(String key,int votes){
@@ -176,18 +188,20 @@ class _GiveAnswerState extends State<GiveAnswer> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color: upVoted ? Colors.greenAccent: Colors.blueGrey,
             onPressed: (){
-                questionVotes.add(email);
-                databaseReference.child(key).child('questionVotes').set(questionVotes);
-                databaseReference.child(key).child('votes').set(votes++);
-                setState(() {
-                  question.votes++;
-                });
+              Votes newVote = new Votes(1, email);
+              setState(() {
+                databaseReference.child(key).child('questionVotes').push().set(newVote.toJson());
+              });
+              databaseReference.child(key).child('votes').set(votes++);
+              setState(() {
+                question.votes++;
+              });
             },
           ),
           Text(
-            questionVotes.length.toString(),
+            voteList.length.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
@@ -219,12 +233,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
             onPressed: (){
               setState(() {
                 databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerlist[answerIndex].key).child("votes").set(answerlist[answerIndex].votes++);
+                    .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes++);
               });
             },
           ),
           Text(
-            answerlist[answerIndex].votes.toString(),
+            answerList[answerIndex].votes.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
@@ -236,7 +250,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             onPressed: (){
               setState(() {
                 databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerlist[answerIndex].key).child("votes").set(answerlist[answerIndex].votes--);
+                    .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes--);
               });
             },
           )
@@ -246,7 +260,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   Widget displayAnswer(){
-    if(answerlist.length == 0){
+    if(answerList.length == 0){
       return Container();
     }
     return Container(    //answers shown here;
@@ -256,7 +270,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       ),
       child: ListView.builder
         (
-          itemCount: answerlist.length,
+          itemCount: answerList.length,
           itemBuilder: (BuildContext ctxt, int index) {
             return Row(
               children: <Widget>[
@@ -267,14 +281,14 @@ class _GiveAnswerState extends State<GiveAnswer> {
                   child: Column(
                     children: <Widget>[
                       new Text(
-                          answerlist[index].answer,
+                          answerList[index].answer,
                           style: TextStyle(
                             color: Colors.blueAccent,
                             fontSize: 22,
                           ),
                       ),
                       new Text(
-                          answerlist[index].comment,
+                          answerList[index].comment,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,

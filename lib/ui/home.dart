@@ -178,23 +178,39 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
+    bool upVoted = false;
+    bool downVoted = false;
+    int totalVotes = 0;
+    List<Votes> voteList = new List();
+    databaseReference.child(snapshot.key).child('questionVotes').once().then((dataSnapshot){
+      Votes vote = Votes.fromSnapshot(dataSnapshot);
+      voteList.add(vote);
+      if(vote.userEmail == email){
+        setState(() {
+          if(vote.updown == 1){
+            totalVotes++;
+            print(vote.userEmail.toString());
+            upVoted = true;
+          }else if(vote.updown == -1){
+            downVoted = true;
+            totalVotes--;
+          }
+        });
+      }
+    });
     return Container(
       child: Column(
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color: upVoted ? Colors.greenAccent : Colors.blueGrey,
             onPressed: (){
-              List<String> list = new List();
-              if(snapshot.value['questionVotes'] != null){
-                for(String voteEmail in snapshot.value['questionVotes']){
-                  list.add(voteEmail);
-                }
-              }
-              list.add(email);
-              databaseReference.child(snapshot.key).child('questionVotes').set(list);
-              databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+              Votes votes = new Votes(1, email);
+              setState(() {
+                databaseReference.child(snapshot.key).child('questionVotes').push().set(votes.toJson());
+                databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+              });
               print("done");
             },
           ),
@@ -234,7 +250,6 @@ class _HomeState extends State<Home> {
         ],
       );
   }
-  
   Widget buttonSet(DataSnapshot snapshot){
     return Row(
       children: <Widget>[
@@ -255,7 +270,6 @@ class _HomeState extends State<Home> {
       ],
     );
   }
-
   void editProfile(){
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
@@ -277,9 +291,5 @@ class _HomeState extends State<Home> {
           return new GiveAnswer(QuestionKey: key,);
         });
     Navigator.of(context).push(router);
-  }
-
-  void votingUp(DataSnapshot snapshot){
-
   }
 }

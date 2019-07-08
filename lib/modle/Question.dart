@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:my_stackoverflow/modle/votes.dart';
 
 import 'Answer.dart';
 
@@ -12,7 +13,7 @@ class Question {
   String description;
   List<Answer> answer;
   int answercount;
-  List<String> questionVotes;
+  List<Votes> questionVotes;
 
   Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount,this.questionVotes);
 
