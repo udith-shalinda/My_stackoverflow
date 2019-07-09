@@ -21,8 +21,11 @@ class _HomeState extends State<Home> {
   DatabaseReference databaseReference,databaseReferenceTwo;
   List<Answer> answerlist;
   String email;
+
   bool upVoted = false;
   bool downVoted = false;
+  List<String> upVoters = new List();
+  List<String> downVoters = new List();
 
   @override
   void initState() {
@@ -180,28 +183,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
-    int totalVotes = 0;
-    List<Votes> voteList = new List();
-    databaseReference.child(snapshot.key).child('questionVotes').once().then((dataSnapshot){
-      if(dataSnapshot.value != null){
-        Votes vote = Votes.fromSnapshot(dataSnapshot);
-        print(vote.userEmail);
-        voteList.add(vote);
-        if(vote.userEmail == email){
-          setState(() {
-            if(vote.updown == 1){
-              totalVotes++;
-              setState(() {
-                upVoted = true;
-              });
-            }else if(vote.updown == -1){
-              downVoted = true;
-              totalVotes--;
-            }
-          });
-        }
-      }
-    });
     return Container(
       child: Column(
         children: <Widget>[
@@ -210,9 +191,9 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: upVoted ? Colors.greenAccent : Colors.blueGrey,
             onPressed: (){
-              Votes votes = new Votes(1, email);
               setState(() {
-                databaseReference.child(snapshot.key).child('questionVotes').push().set(votes.toJson());
+                upVoters.add(email);
+                databaseReference.child(snapshot.key).child('upVoters').set(upVoters);
                 databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
                 upVoted = true;
               });
@@ -220,8 +201,7 @@ class _HomeState extends State<Home> {
             },
           ),
           Text(
-            (snapshot.value['questionVotes'] != null) ?
-            snapshot.value['questionVotes'].length.toString() : "0",
+            snapshot.value['votes'].toString(),
               style: TextStyle(
                 fontSize: 25
               ),
@@ -231,8 +211,8 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
-              Votes votes = new Votes(-1, email);
-              databaseReference.child(snapshot.key).child('questionVotes').push().set(votes.toJson());
+              downVoters.add(email);
+              databaseReference.child(snapshot.key).child('upVoters').set(downVoters);
               databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
             },
           )
@@ -240,6 +220,8 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+
   Widget questionandAnswer(DataSnapshot snapshot){
       return Column(
         children: <Widget>[

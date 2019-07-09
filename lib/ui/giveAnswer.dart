@@ -25,24 +25,29 @@ class _GiveAnswerState extends State<GiveAnswer> {
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
-  Answer finalAnswer = new Answer("","",0);
+  Answer finalAnswer = new Answer("","",0,null);
   List<Answer> answerList = new List();
-  List<Votes> voteList = new List();
+
   String email;
+
   String upVoted= "";
   String downVoted = "";
   int questionVotes =0;
+  List<String> upVoters = new List();
+  List<String> downVoters = new List();
+
 
 
   @override
   void initState() {
     super.initState();
     getSharedPreference();
-    question = new Question("fsfs", "", "", null,0,0,null);
+    question = new Question("fsfs", "", "", null,0,0,null,null);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
-    databaseReference.child(widget.QuestionKey).child("questionVotes").onChildAdded.listen(setVotes);
+    databaseReference.child(widget.QuestionKey).child("upVoters").onChildAdded.listen(setQuestionUpVotes);
+    databaseReference.child(widget.QuestionKey).child("downVoters").onChildAdded.listen(setQuestionDownVotes);
   }
 
   @override
@@ -130,7 +135,6 @@ class _GiveAnswerState extends State<GiveAnswer> {
                         ],
                       ),
                   ),
-
                 ),
               ),
             )
@@ -163,23 +167,18 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   void setAnswers(Event event){
     setState(() {
-      answerList.add(Answer.fromSnapshot(event.snapshot));
+      Answer oneAnswer = Answer.fromSnapshot(event.snapshot);
+      answerList.add(oneAnswer);
     });
   }
-  void setVotes(Event event){
-      Votes oneVote = Votes.fromSnapshot(event.snapshot);
-      voteList.add(oneVote);
-      if(oneVote.updown ==1 ){
-        questionVotes++;
-        if(oneVote.userEmail == email){
-          upVoted = oneVote.key;
-        }
-      }else{
-        questionVotes--;
-        if(oneVote.userEmail == email){
-          downVoted = oneVote.key;
-        }
-      }
+  void setQuestionUpVotes(Event event){
+
+  }
+  void setQuestionDownVotes(Event event){
+
+  }
+  void setAnswerVotes(Event event){
+
   }
   
   Widget voteupdownQuestion(String key,int votes){
@@ -202,7 +201,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             },
           ),
           Text(
-            questionVotes.toString(),
+            votes.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
