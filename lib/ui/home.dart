@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
+import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,8 +23,7 @@ class _HomeState extends State<Home> {
   List<Answer> answerlist;
   String email;
 
-  bool upVoted = false;
-  bool downVoted = false;
+  
   List<String> upVoters = new List();
   List<String> downVoters = new List();
 
@@ -183,15 +183,16 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
-    // List<Votes> voteList = new List();
-    int voters ;
-    if(snapshot.value['upVoters'] != null){
-      voters= snapshot.value['upVoters'].length;
-      if(snapshot.value['downVoters'] != null){
-        voters -= snapshot.value['downVoters'].length;
-      }
+    bool upVoted = false;
+    bool downVoted = false;
+    int voters;
+    Question question = Question.fromSnapshot(snapshot);
+    voters = question.votes;
+    if(voters == 1){  //condition
+      upVoted = true;
+    }else if(voters ==3){
+      downVoted = true;
     }
-    print(snapshot.value['upVoters']);
     
     return Container(
       child: Column(
@@ -199,7 +200,7 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: upVoted ? Colors.greenAccent : Colors.blueGrey,
+            color: upVoted ? Colors.orange : Colors.blueGrey,
             onPressed: (){
               setState(() {
                 Votes vote = new Votes(email);
@@ -219,7 +220,7 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color: downVoted ? Colors.orange : Colors.blueGrey,
             onPressed: (){
               Votes vote = new Votes(email);
                 databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());

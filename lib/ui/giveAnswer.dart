@@ -25,13 +25,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
-  Answer finalAnswer = new Answer("","",0,null);
+  Answer finalAnswer = new Answer("","",0,null,null);
   List<Answer> answerList = new List();
 
   String email;
 
-  String upVoted= "";
-  String downVoted = "";
+  
   int questionVotes =0;
   List<String> upVoters = new List();
   List<String> downVoters = new List();
@@ -171,7 +170,11 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   
   Widget voteupdownQuestion(String key,int votes){
-    
+    String upVoted= "";
+    String downVoted = "";
+    if(votes == 1){
+      upVoted = "sfsfsf";
+    }
     return Container(
       child: Column(
         children: <Widget>[
@@ -215,6 +218,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   Widget voteupdownAnswers(int answerIndex){
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -223,6 +227,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+              Votes vote = new Votes(email);
+              databaseReference.child(widget.QuestionKey).child("answer")
+                    .child(answerList[answerIndex].key).child('upVoters').push().set(vote.toJson());
               setState(() {
                 databaseReference.child(widget.QuestionKey).child("answer")
                     .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes++);
@@ -240,6 +247,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+              Votes vote = new Votes(email);
+              databaseReference.child(widget.QuestionKey).child("answer")
+                    .child(answerList[answerIndex].key).child('downVoters').push().set(vote.toJson());
               setState(() {
                 databaseReference.child(widget.QuestionKey).child("answer")
                     .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes--);

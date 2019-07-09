@@ -6,15 +6,19 @@ class Answer {
   String answer;
   String comment;
   int votes;
-  List<Votes> answerVotes;
+  List<Votes> upVoters;
+  List<Votes> downVoters;
 
-  Answer(this.answer,this.comment,this.votes,this.answerVotes);
+  Answer(this.answer,this.comment,this.votes,this.upVoters,this.downVoters);
 
   Answer.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
         answer = snapshot.value['answer'],
         comment = snapshot.value['comment'],
-        votes = snapshot.value['votes'];
+        votes = (snapshot.value['upVoters'] != null) ?
+         snapshot.value['upVoters'].length 
+         -((snapshot.value['downVoters'] != null)? snapshot.value['downVoters'].length:0) :0 -
+          ((snapshot.value['downVoters'] != null)? snapshot.value['downVoters'].length:0);
 
 
 
@@ -23,7 +27,8 @@ class Answer {
       "answer" : answer,
       "comment" :comment,
       "votes" : votes,
-      "anwerVotes" : answerVotes,
+      "anwerVoters" : upVoters,
+      "downVoters" : downVoters,
     };
   }
 
