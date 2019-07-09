@@ -183,6 +183,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
+    String upvoters = snapshot.value['upVoters'].length.toString();
     return Container(
       child: Column(
         children: <Widget>[
@@ -192,8 +193,7 @@ class _HomeState extends State<Home> {
             color: upVoted ? Colors.greenAccent : Colors.blueGrey,
             onPressed: (){
               setState(() {
-                upVoters.add(email);
-                databaseReference.child(snapshot.key).child('upVoters').set(upVoters);
+                databaseReference.child(snapshot.key).child('upVoters').push().set(email);
                 databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
                 upVoted = true;
               });
@@ -201,7 +201,7 @@ class _HomeState extends State<Home> {
             },
           ),
           Text(
-            snapshot.value['votes'].toString(),
+            upvoters,
               style: TextStyle(
                 fontSize: 25
               ),
@@ -211,8 +211,6 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
-              downVoters.add(email);
-              databaseReference.child(snapshot.key).child('upVoters').set(downVoters);
               databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
             },
           )

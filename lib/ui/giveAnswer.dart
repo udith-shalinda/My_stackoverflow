@@ -46,8 +46,6 @@ class _GiveAnswerState extends State<GiveAnswer> {
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
-    databaseReference.child(widget.QuestionKey).child("upVoters").onChildAdded.listen(setQuestionUpVotes);
-    databaseReference.child(widget.QuestionKey).child("downVoters").onChildAdded.listen(setQuestionDownVotes);
   }
 
   @override
@@ -171,15 +169,6 @@ class _GiveAnswerState extends State<GiveAnswer> {
       answerList.add(oneAnswer);
     });
   }
-  void setQuestionUpVotes(Event event){
-
-  }
-  void setQuestionDownVotes(Event event){
-
-  }
-  void setAnswerVotes(Event event){
-
-  }
   
   Widget voteupdownQuestion(String key,int votes){
     return Container(
@@ -190,10 +179,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: upVoted != "" ? Colors.orange: Colors.blueGrey,
             onPressed: (){
-              Votes newVote = new Votes(1, email);
               setState(() {
                 if(upVoted == ""){
-                  databaseReference.child(key).child('questionVotes').push().set(newVote.toJson());
                   databaseReference.child(key).child('votes').set(votes++);
                   question.votes++;
                 }
@@ -211,12 +198,6 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: downVoted != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              if(upVoted != ""){
-                databaseReference.child(key).child("questionVotes").child(upVoted).remove();
-              }else if(downVoted == ""){
-                Votes vote = new Votes(-1, email);
-                databaseReference.child(key).child("questionVotes").push().set(vote.toJson());
-              }
               databaseReference.child(key).child('votes').set(votes--);
               setState(() {
                 question.votes--;

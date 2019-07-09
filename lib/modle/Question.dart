@@ -23,7 +23,7 @@ class Question {
         email = snapshot.value['email'],
         question = snapshot.value['question'],
         description = snapshot.value['description'],
-        votes = snapshot.value['votes'],
+        votes = snapshot.value['upVoters'].length,
         answercount = snapshot.value['answercount'];
 
 
