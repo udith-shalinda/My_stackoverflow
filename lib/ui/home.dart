@@ -183,9 +183,9 @@ class _HomeState extends State<Home> {
     int totalVotes = 0;
     List<Votes> voteList = new List();
     databaseReference.child(snapshot.key).child('questionVotes').once().then((dataSnapshot){
-      print(dataSnapshot.value);
       if(dataSnapshot.value != null){
         Votes vote = Votes.fromSnapshot(dataSnapshot);
+        print(vote.userEmail);
         voteList.add(vote);
         if(vote.userEmail == email){
           setState(() {
@@ -231,6 +231,8 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+              Votes votes = new Votes(-1, email);
+              databaseReference.child(snapshot.key).child('questionVotes').push().set(votes.toJson());
               databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
             },
           )

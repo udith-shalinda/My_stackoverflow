@@ -31,6 +31,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   String email;
   String upVoted= "";
   String downVoted = "";
+  int questionVotes =0;
 
 
   @override
@@ -42,7 +43,6 @@ class _GiveAnswerState extends State<GiveAnswer> {
     databaseReference.onChildAdded.listen(setQuestion);
     databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
     databaseReference.child(widget.QuestionKey).child("questionVotes").onChildAdded.listen(setVotes);
-    databaseReference.child(widget.QuestionKey).child("questionVotes").onChildChanged.listen(resetVotes);
   }
 
   @override
@@ -169,19 +169,17 @@ class _GiveAnswerState extends State<GiveAnswer> {
   void setVotes(Event event){
       Votes oneVote = Votes.fromSnapshot(event.snapshot);
       voteList.add(oneVote);
-      if(oneVote.userEmail == email){
-          if(oneVote.updown == 1){
-            upVoted = oneVote.key;
-          }else if(oneVote.updown == -1){
-            downVoted = oneVote.key;
-          }
+      if(oneVote.updown ==1 ){
+        questionVotes++;
+        if(oneVote.userEmail == email){
+          upVoted = oneVote.key;
         }
-  }
-  void resetVotes(Event event){
-    Votes oneVote = Votes.fromSnapshot(event.snapshot);
-    setState(() {
-      voteList.remove(oneVote);
-    });
+      }else{
+        questionVotes--;
+        if(oneVote.userEmail == email){
+          downVoted = oneVote.key;
+        }
+      }
   }
   
   Widget voteupdownQuestion(String key,int votes){
@@ -204,7 +202,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             },
           ),
           Text(
-            voteList.length.toString(),
+            questionVotes.toString(),
             style: TextStyle(
                 fontSize: 25
             ),
@@ -277,8 +275,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       decoration: BoxDecoration(
         color: Colors.grey,
       ),
-      child: ListView.builder
-        (
+      child: ListView.builder(
           itemCount: answerList.length,
           itemBuilder: (BuildContext ctxt, int index) {
             return Row(
