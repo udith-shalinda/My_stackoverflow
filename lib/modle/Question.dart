@@ -13,8 +13,8 @@ class Question {
   String description;
   List<Answer> answer;
   int answercount;
-  List<String> upVoters;
-  List<String> downVoters;
+  List<Votes> upVoters;
+  List<Votes> downVoters;
 
   Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount,this.upVoters,this.downVoters);
 
@@ -23,8 +23,12 @@ class Question {
         email = snapshot.value['email'],
         question = snapshot.value['question'],
         description = snapshot.value['description'],
-        votes = snapshot.value['upVoters'].length,
+        votes = (snapshot.value['upVoters'] != null) ?
+         snapshot.value['upVoters'].length 
+         -((snapshot.value['downVoters'] != null)? snapshot.value['downVoters'].length:0) :0 -
+          ((snapshot.value['downVoters'] != null)? snapshot.value['downVoters'].length:0),
         answercount = snapshot.value['answercount'];
+      
 
 
   toJson(){

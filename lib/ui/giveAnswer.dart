@@ -171,6 +171,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   
   Widget voteupdownQuestion(String key,int votes){
+    
     return Container(
       child: Column(
         children: <Widget>[
@@ -181,6 +182,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
             onPressed: (){
               setState(() {
                 if(upVoted == ""){
+                  Votes vote = new Votes(email);
+                  databaseReference.child(widget.QuestionKey).child('upVoters').push().set(vote.toJson());
                   databaseReference.child(key).child('votes').set(votes++);
                   question.votes++;
                 }
@@ -198,6 +201,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: downVoted != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
+              Votes vote = new Votes(email);
+              databaseReference.child(widget.QuestionKey).child('downVoters').push().set(vote.toJson());
               databaseReference.child(key).child('votes').set(votes--);
               setState(() {
                 question.votes--;

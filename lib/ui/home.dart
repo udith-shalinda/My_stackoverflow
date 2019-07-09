@@ -183,7 +183,16 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
-    String upvoters = snapshot.value['upVoters'].length.toString();
+    // List<Votes> voteList = new List();
+    int voters ;
+    if(snapshot.value['upVoters'] != null){
+      voters= snapshot.value['upVoters'].length;
+      if(snapshot.value['downVoters'] != null){
+        voters -= snapshot.value['downVoters'].length;
+      }
+    }
+    print(snapshot.value['upVoters']);
+    
     return Container(
       child: Column(
         children: <Widget>[
@@ -193,7 +202,8 @@ class _HomeState extends State<Home> {
             color: upVoted ? Colors.greenAccent : Colors.blueGrey,
             onPressed: (){
               setState(() {
-                databaseReference.child(snapshot.key).child('upVoters').push().set(email);
+                Votes vote = new Votes(email);
+                databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());
                 databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
                 upVoted = true;
               });
@@ -201,7 +211,7 @@ class _HomeState extends State<Home> {
             },
           ),
           Text(
-            upvoters,
+            voters.toString(),
               style: TextStyle(
                 fontSize: 25
               ),
@@ -211,6 +221,8 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: Colors.blueGrey,
             onPressed: (){
+              Votes vote = new Votes(email);
+                databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());
               databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
             },
           )
