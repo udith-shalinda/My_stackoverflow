@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -188,11 +191,27 @@ class _HomeState extends State<Home> {
     int voters;
     Question question = Question.fromSnapshot(snapshot);
     voters = question.votes;
-    if(voters == 1){  //condition
-      upVoted = true;
-    }else if(voters ==3){
-      downVoted = true;
+    
+  
+    Map<dynamic,dynamic> MapUpVote = new Map();
+    if(snapshot.value['upVoters'] != null){
+        MapUpVote = snapshot.value['upVoters'];
+        MapUpVote.forEach((key,vote){
+          if(vote['userEmail'] == email){
+            upVoted = true;
+          }
+        });
     }
+    if(snapshot.value['downVoters'] != null){
+        Map<dynamic,dynamic> MapDownVote = new Map();
+        MapDownVote = snapshot.value['downVoters'];
+        MapDownVote.forEach((key,vote){
+          if(vote['userEmail'] == email){
+            downVoted = true;
+          }
+        });
+    }
+    
     
     return Container(
       child: Column(
@@ -202,13 +221,14 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: upVoted ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              setState(() {
-                Votes vote = new Votes(email);
-                databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());
-                databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
-                upVoted = true;
-              });
-              print("done");
+              if(!upVoted){
+                  setState(() {
+                    Votes vote = new Votes(email);
+                    databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());              
+                    databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
+                    upVoted = true;
+                  });
+              }
             },
           ),
           Text(
@@ -222,9 +242,12 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: downVoted ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              Votes vote = new Votes(email);
-                databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());
-              databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
+              if(!downVoted){
+                  Votes vote = new Votes(email);
+                    databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());
+                  databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
+                  downVoted = true;
+              }
             },
           )
         ],

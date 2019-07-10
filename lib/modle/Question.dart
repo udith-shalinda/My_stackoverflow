@@ -15,6 +15,7 @@ class Question {
   int answercount;
   List<Votes> upVoters;
   List<Votes> downVoters;
+  List<String> voters;
 
   Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount,this.upVoters,this.downVoters);
 
