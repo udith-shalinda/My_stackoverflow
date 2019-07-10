@@ -1,5 +1,3 @@
-import 'dart:collection';
-import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -186,28 +184,28 @@ class _HomeState extends State<Home> {
   }
 
   Widget voteupdown(DataSnapshot snapshot){
-    bool upVoted = false;
-    bool downVoted = false;
+    String upVoted = "";
+    String downVoted = "";
     int voters;
     Question question = Question.fromSnapshot(snapshot);
     voters = question.votes;
     
   
-    Map<dynamic,dynamic> MapUpVote = new Map();
-    if(snapshot.value['upVoters'] != null){
-        MapUpVote = snapshot.value['upVoters'];
-        MapUpVote.forEach((key,vote){
+    Map<dynamic,dynamic> mapUpVote = new Map();
+      if(snapshot.value['upVoters'] != null){
+        mapUpVote = snapshot.value['upVoters'];
+        mapUpVote.forEach((key,vote){
           if(vote['userEmail'] == email){
-            upVoted = true;
+            upVoted = key;
           }
-        });
+      });
     }
     if(snapshot.value['downVoters'] != null){
-        Map<dynamic,dynamic> MapDownVote = new Map();
-        MapDownVote = snapshot.value['downVoters'];
-        MapDownVote.forEach((key,vote){
+        Map<dynamic,dynamic> mapDownVote = new Map();
+        mapDownVote = snapshot.value['downVoters'];
+        mapDownVote.forEach((key,vote){
           if(vote['userEmail'] == email){
-            downVoted = true;
+            downVoted = key;
           }
         });
     }
@@ -219,15 +217,16 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: upVoted ? Colors.orange : Colors.blueGrey,
+            color: upVoted != "" ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              if(!upVoted){
-                  setState(() {
+              if(upVoted == ""){
+                if(downVoted != ""){
+                    databaseReference.child(snapshot.key).child('upVoters').child(downVoted).remove();              
+                }else{
                     Votes vote = new Votes(email);
                     databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());              
                     databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
-                    upVoted = true;
-                  });
+                }
               }
             },
           ),
@@ -240,13 +239,16 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
-            color: downVoted ? Colors.orange : Colors.blueGrey,
+            color: downVoted != "" ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              if(!downVoted){
-                  Votes vote = new Votes(email);
+              if(downVoted == ""){
+                  if(upVoted != ""){
+                    databaseReference.child(snapshot.key).child('upVoters').child(upVoted).remove();
+                  }else{
+                    Votes vote = new Votes(email);
                     databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());
-                  databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
-                  downVoted = true;
+                    databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
+                  }
               }
             },
           )
