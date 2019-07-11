@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
             onPressed: (){
               if(upVoted == ""){
                 if(downVoted != ""){
-                    databaseReference.child(snapshot.key).child('upVoters').child(downVoted).remove();              
+                    databaseReference.child(snapshot.key).child('downVoters').child(downVoted).remove();              
                 }else{
                     Votes vote = new Votes(email);
                     databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());              
