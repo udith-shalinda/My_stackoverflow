@@ -117,10 +117,10 @@ class _HomeState extends State<Home> {
                                               CircleAvatar(
                                                 radius: 30.0,
                                                 backgroundColor: Colors.black,
-                                                child: new Text(snapshot.value['email'].substring(5,10)),
+                                                child: new Text(snapshot.value['user'].substring(5,10)),
                                               ),
                                               Text(
-                                                "   "+snapshot.value['email'].toString(),
+                                                "   "+snapshot.value['user'].toString(),
                                                 style: TextStyle(color: Colors.black),
                                               ),
                                             ],
@@ -182,7 +182,7 @@ class _HomeState extends State<Home> {
     }else{
       email =  prefs.getString('userEmail');
       String userKey = prefs.getString('userKey');
-      print(userKey);
+     
     }
   }
 
@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
     Question question = Question.fromSnapshot(snapshot);
     voters = question.votes;
     
-  
+
     Map<dynamic,dynamic> mapUpVote = new Map();
       if(snapshot.value['upVoters'] != null){
         mapUpVote = snapshot.value['upVoters'];
@@ -229,6 +229,11 @@ class _HomeState extends State<Home> {
                     databaseReference.child(snapshot.key).child('upVoters').push().set(vote.toJson());              
                     databaseReference.child(snapshot.key).child('votes').set(++snapshot.value['votes']);
                 }
+                //give points to the question owner;
+                 database.reference().child("userDetails").child(question.user).once().then((result){
+                   database.reference().child("userDetails").child(question.user).child("points").set(++result.value['points']);
+                });
+
               }
             },
           ),
@@ -251,6 +256,10 @@ class _HomeState extends State<Home> {
                     databaseReference.child(snapshot.key).child('downVoters').push().set(vote.toJson());
                     databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
                   }
+                  //give points to the question owner;
+                 database.reference().child("userDetails").child(question.user).once().then((result){
+                   database.reference().child("userDetails").child(question.user).child("points").set(--result.value['points']);
+                });
               }
             },
           )

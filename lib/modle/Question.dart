@@ -8,7 +8,7 @@ import 'Answer.dart';
 class Question {
   String key;
   int votes;
-  String email;
+  String user;
   String question;
   String description;
   List<Answer> answer;
@@ -17,11 +17,11 @@ class Question {
   List<Votes> downVoters;
   List<String> voters;
 
-  Question(this.email,this.question,this.description,this.answer,this.votes,this.answercount,this.upVoters,this.downVoters);
+  Question(this.user,this.question,this.description,this.answer,this.votes,this.answercount,this.upVoters,this.downVoters);
 
   Question.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
-        email = snapshot.value['email'],
+        user = snapshot.value['user'],
         question = snapshot.value['question'],
         description = snapshot.value['description'],
         votes = (snapshot.value['upVoters'] != null) ?
@@ -34,7 +34,7 @@ class Question {
 
   toJson(){
     return {
-      "email" : email,
+      "user" : user,
       "question" : question,
       "description" :description,
       "answer" : answer,

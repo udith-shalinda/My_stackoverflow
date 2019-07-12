@@ -87,7 +87,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             child: new Text("sgsfsf"),
                           ),
                           Text(
-                            "  " + question.email,
+                            "  " + question.user,
                             style: TextStyle(color: Colors.black),
                           ),
                         ],

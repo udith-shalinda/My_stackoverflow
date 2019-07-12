@@ -19,6 +19,7 @@ class AddQuestionState extends State<AddQuestion> {
   DatabaseReference databaseReference;
   var _formKey = GlobalKey<FormState>();
   Question createQuestion;
+  String userKey;
 
 
   @override
@@ -26,7 +27,7 @@ class AddQuestionState extends State<AddQuestion> {
     super.initState();
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
-    createQuestion = new Question("fsfs", "", "", null,0,0,null,null);
+    createQuestion = new Question("", "", "", null,0,0,null,null);
   }
 
   @override
@@ -143,13 +144,14 @@ class AddQuestionState extends State<AddQuestion> {
       );
     }else{
       email =  prefs.getString('userEmail');
+      userKey = prefs.getString('userKey');
     }
   }
 
   void AddQuestionButton(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      createQuestion.email = email;
+      createQuestion.user = userKey;
         uploadQuestion();
     }
   }
