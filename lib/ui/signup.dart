@@ -175,7 +175,7 @@ class _SignUpState extends State<SignUp> {
   }
   void createUser(){
     databaseReference = database.reference().child("userDetails");
-    User user = new User("",_email,"","");
+    User user = new User("",_email,"","",0);
     databaseReference.push().set(user.toJson());
   }
 }

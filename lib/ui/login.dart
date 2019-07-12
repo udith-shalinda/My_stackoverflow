@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/ui/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,11 +24,12 @@ class _LoginState extends State<Login> {
   var _formKey = GlobalKey<FormState>();
   String _email;
   String _formpassword;
+  String userKey;
 
 
   @override
   void initState() {
-    databaseReference = database.reference().child("user");
+    databaseReference = database.reference().child("userDetails");
   }
 
   @override
@@ -142,6 +144,15 @@ class _LoginState extends State<Login> {
     );
   }
 
+  void getTheUser(Event event){
+     User user = User.fromSnapshot(event.snapshot);
+     if(_email == user.email){
+       userKey = user.key;
+       print(user.email);
+     }
+    
+  }
+
   void signUp(){
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
@@ -153,6 +164,7 @@ class _LoginState extends State<Login> {
   void loginButton(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      databaseReference.onChildAdded.listen(getTheUser);
       signInWithCredentials(_email, _formpassword);
     }
   }
@@ -171,6 +183,7 @@ class _LoginState extends State<Login> {
       if(user != null){
         incorrectPassword = false;
         prefs.setString("userEmail", _email);
+        prefs.setString("userKey", userKey);
         var router = new MaterialPageRoute(
             builder: (BuildContext context){
               return new Home();

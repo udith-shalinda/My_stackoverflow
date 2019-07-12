@@ -34,9 +34,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
 
   
   int questionVotes =0;
-  List<String> upVoters = new List();
-  List<String> downVoters = new List();
-
+  
 
 
   @override
@@ -185,6 +183,26 @@ class _GiveAnswerState extends State<GiveAnswer> {
   void setAnswers(Event event){
     setState(() {
       Answer oneAnswer = Answer.fromSnapshot(event.snapshot);
+      //oneAnswer.upVoters = "";
+
+       Map<dynamic,dynamic> mapUpVote = new Map();
+        if(event.snapshot.value['upVoters'] != null){
+          mapUpVote = event.snapshot.value['upVoters'];
+          mapUpVote.forEach((key,vote){
+            if(vote['userEmail'] == email){
+              oneAnswer.upVote = key;
+            }
+        });
+      }
+      if(event.snapshot.value['downVoters'] != null){
+          Map<dynamic,dynamic> mapDownVote = new Map();
+          mapDownVote = event.snapshot.value['downVoters'];
+          mapDownVote.forEach((key,vote){
+            if(vote['userEmail'] == email){
+              oneAnswer.downVote = key;
+            }
+          });
+      }
       answerList.add(oneAnswer);
     });
   }
@@ -226,23 +244,23 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: downVoted != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              if(upVoted != ""){
-                    databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).remove();
-                    upVoted = "";
+              if(downVoted == ""){
+                if(upVoted != ""){
+                      databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).remove();
+                      upVoted = "";
+                      setState(() {
+                      question.votes--;
+                    });
+                }else{
+                    Votes vote = new Votes(email);
+                    downVoted = databaseReference.child(widget.QuestionKey).child('downVoters').push().key;
+                    databaseReference.child(widget.QuestionKey).child('downVoters').child(downVoted).set(vote.toJson());
                     setState(() {
-                    question.votes--;
-                  });
-              }else{
-                  Votes vote = new Votes(email);
-                  downVoted = databaseReference.child(widget.QuestionKey).child('downVoters').push().key;
-                  databaseReference.child(widget.QuestionKey).child('downVoters').child(downVoted).set(vote.toJson());
-                  databaseReference.child(key).child('votes').set(votes--);
-                  setState(() {
-                    question.votes--;
-                  });
-
-                  }
-              },
+                      question.votes--;
+                    });
+                }
+              }
+            },
           )
         ],
       ),
@@ -250,22 +268,32 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   Widget voteupdownAnswers(int answerIndex){
-
     return Container(
       child: Column(
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.keyboard_arrow_up),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color:  answerList[answerIndex].upVote  != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              Votes vote = new Votes(email);
-              databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerList[answerIndex].key).child('upVoters').push().set(vote.toJson());
-              setState(() {
-                databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes++);
-              });
+              if(answerList[answerIndex].upVote == ""){
+                answerList[answerIndex].votes++;
+                if(answerList[answerIndex].downVote != ""){
+                      databaseReference.child(widget.QuestionKey).child("answer")
+                      .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].downVote).remove();
+                      setState(() {
+                        answerList[answerIndex].downVote = "";
+                    });
+                }else{
+                    Votes vote = new Votes(email);
+                    setState(() {
+                      answerList[answerIndex].upVote = databaseReference.child(widget.QuestionKey).child("answer")
+                        .child(answerList[answerIndex].key).child('upVoters').push().key; 
+                    });
+                    databaseReference.child(widget.QuestionKey).child("answer")
+                      .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].upVote).set(vote.toJson());  
+                }
+              }
             },
           ),
           Text(
@@ -277,15 +305,24 @@ class _GiveAnswerState extends State<GiveAnswer> {
           IconButton(
             icon: Icon(Icons.keyboard_arrow_down),
             iconSize: 50,
-            color: Colors.blueGrey,
+            color: answerList[answerIndex].downVote != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              Votes vote = new Votes(email);
-              databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerList[answerIndex].key).child('downVoters').push().set(vote.toJson());
-              setState(() {
-                databaseReference.child(widget.QuestionKey).child("answer")
-                    .child(answerList[answerIndex].key).child("votes").set(answerList[answerIndex].votes--);
-              });
+              if(answerList[answerIndex].downVote == ""){
+                answerList[answerIndex].votes--;
+                if(answerList[answerIndex].upVote != ""){
+                      databaseReference.child(widget.QuestionKey).child("answer")
+                      .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].upVote).remove();
+                      setState(() {
+                        answerList[answerIndex].upVote = "";
+                    });
+                }else{
+                    Votes vote = new Votes(email);
+                    answerList[answerIndex].downVote = databaseReference.child(widget.QuestionKey).child("answer")
+                      .child(answerList[answerIndex].key).child('downVoters').push().key;
+                    databaseReference.child(widget.QuestionKey).child("answer")
+                      .child(answerList[answerIndex].key).child('downVoters').child(answerList[answerIndex].downVote).set(vote.toJson());  
+                }
+              }
             },
           )
         ],

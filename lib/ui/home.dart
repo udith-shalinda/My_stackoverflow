@@ -4,6 +4,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
+import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -180,6 +181,8 @@ class _HomeState extends State<Home> {
       );
     }else{
       email =  prefs.getString('userEmail');
+      String userKey = prefs.getString('userKey');
+      print(userKey);
     }
   }
 
@@ -209,7 +212,6 @@ class _HomeState extends State<Home> {
           }
         });
     }
-    
     
     return Container(
       child: Column(

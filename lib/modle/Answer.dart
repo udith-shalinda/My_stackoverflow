@@ -8,6 +8,8 @@ class Answer {
   int votes;
   List<Votes> upVoters;
   List<Votes> downVoters;
+  String upVote = "";
+  String downVote = "";
 
   Answer(this.answer,this.comment,this.votes,this.upVoters,this.downVoters);
 

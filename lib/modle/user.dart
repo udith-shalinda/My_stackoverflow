@@ -6,14 +6,16 @@ class User {
   String github;
   String linkedin;
   String email;
+  int points;
 
-  User(this.name,this.email,this.github,this.linkedin);
+  User(this.name,this.email,this.github,this.linkedin,this.points);
 
   User.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
         name = snapshot.value['name'],
         email = snapshot.value['email'],
         github = snapshot.value['github'],
+        points = snapshot.value['points'],
         linkedin = snapshot.value['linkedin'];
 
 
@@ -23,6 +25,7 @@ class User {
       "email" :email,
       "github" : github,
       "linkedin" : linkedin,
+      "points" : points
     };
   }
 
