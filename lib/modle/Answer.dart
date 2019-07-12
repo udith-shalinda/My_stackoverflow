@@ -10,13 +10,15 @@ class Answer {
   List<Votes> downVoters;
   String upVote = "";
   String downVote = "";
+  String user;
 
-  Answer(this.answer,this.comment,this.votes,this.upVoters,this.downVoters);
+  Answer(this.answer,this.comment,this.votes,this.upVoters,this.downVoters,this.user);
 
   Answer.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
         answer = snapshot.value['answer'],
         comment = snapshot.value['comment'],
+        user = snapshot.value['user'],
         votes = (snapshot.value['upVoters'] != null) ?
          snapshot.value['upVoters'].length 
          -((snapshot.value['downVoters'] != null)? snapshot.value['downVoters'].length:0) :0 -
@@ -29,6 +31,7 @@ class Answer {
       "answer" : answer,
       "comment" :comment,
       "votes" : votes,
+      "user" : user,
       "anwerVoters" : upVoters,
       "downVoters" : downVoters,
     };

@@ -25,12 +25,13 @@ class _GiveAnswerState extends State<GiveAnswer> {
   bool addAnswer = false;
   var answer = new TextEditingController();
   var answerDescription = new TextEditingController();
-  Answer finalAnswer = new Answer("","",0,null,null);
+  Answer finalAnswer = new Answer("","",0,null,null,'');
   List<Answer> answerList = new List();
   String upVoted= "";
   String downVoted = "";
 
   String email;
+  String userKey;
 
   
   int questionVotes =0;
@@ -152,6 +153,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       );
     }else{
       email =  prefs.getString('userEmail');
+      userKey = prefs.getString('userKey');
     }
   }
 
@@ -229,6 +231,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                     databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).set(vote.toJson());
                     question.votes++;
                   }
+                  //give points to the question owner;
+                  database.reference().child("userDetails").child(question.user).once().then((result){
+                    database.reference().child("userDetails").child(question.user).child("points").set(++result.value['points']);
+                  });
                 }
               });
             },
@@ -259,6 +265,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                       question.votes--;
                     });
                 }
+                //give points to the question owner;
+                database.reference().child("userDetails").child(question.user).once().then((result){
+                  database.reference().child("userDetails").child(question.user).child("points").set(--result.value['points']);
+                });
               }
             },
           )
@@ -293,6 +303,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                     databaseReference.child(widget.QuestionKey).child("answer")
                       .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].upVote).set(vote.toJson());  
                 }
+                //give points to the question owner;
+                database.reference().child("userDetails").child(answerList[answerIndex].user).once().then((result){
+                  database.reference().child("userDetails").child(answerList[answerIndex].user).child("points").set(++result.value['points']);
+                });
               }
             },
           ),
@@ -322,6 +336,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
                     databaseReference.child(widget.QuestionKey).child("answer")
                       .child(answerList[answerIndex].key).child('downVoters').child(answerList[answerIndex].downVote).set(vote.toJson());  
                 }
+                database.reference().child("userDetails").child(answerList[answerIndex].user).once().then((result){
+                  database.reference().child("userDetails").child(answerList[answerIndex].user).child("points").set(--result.value['points']);
+                });
               }
             },
           )
@@ -386,7 +403,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
         TextField(
           controller: answerDescription,
           decoration: new InputDecoration(
-              labelText: "Enter your answer"
+              labelText: "Enter your answer description"
           ),
         ),
         RaisedButton(
@@ -403,14 +420,14 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
   void postAnswer(){
     if(answer.text.length != 0){
-      setState(() {
-        addAnswer = false;
-      });
-
       finalAnswer.answer = answer.text;
       finalAnswer.comment = answerDescription.text;
+      finalAnswer.user = userKey;
       databaseReference.child(widget.QuestionKey).child("answer").push().set(finalAnswer.toJson());
-      databaseReference.child(widget.QuestionKey).child('answercount').set(++question.answercount);
+      answer.text = "";
+      answerDescription.text = "";
+      addAnswer = false;
+     
     }
   }
 }

@@ -257,9 +257,9 @@ class _HomeState extends State<Home> {
                     databaseReference.child(snapshot.key).child('votes').set(--snapshot.value['votes']);
                   }
                   //give points to the question owner;
-                 database.reference().child("userDetails").child(question.user).once().then((result){
-                   database.reference().child("userDetails").child(question.user).child("points").set(--result.value['points']);
-                });
+                  database.reference().child("userDetails").child(question.user).once().then((result){
+                    database.reference().child("userDetails").child(question.user).child("points").set(--result.value['points']);
+                  });
               }
             },
           )
