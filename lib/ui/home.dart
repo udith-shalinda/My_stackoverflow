@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   List<Answer> answerlist;
   String email;
   String userKey;
-  User user;
+  User user = new User("","","","",0);
 
 
   @override
@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
                             onPressed: (){},
                           ),
                           Text(
-                            user.linkedin
+                            user.linkedin,
                           ),
                         ],
                       ),
@@ -216,10 +216,12 @@ class _HomeState extends State<Home> {
     }
   }
 
-   void getTheUser(Event event){
+   Future getTheUser(Event event){
      User thisuser = User.fromSnapshot(event.snapshot);
      if(userKey == thisuser.key){
-       user = thisuser;
+       setState(() {
+        user = thisuser; 
+       });
      } 
   }
 
