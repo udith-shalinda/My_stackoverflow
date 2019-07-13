@@ -287,7 +287,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
             color:  answerList[answerIndex].upVote  != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
               if(answerList[answerIndex].upVote == ""){
-                answerList[answerIndex].votes++;
+                setState(() {
+                  answerList[answerIndex].votes++;
+                });
                 if(answerList[answerIndex].downVote != ""){
                       databaseReference.child(widget.QuestionKey).child("answer")
                       .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].downVote).remove();
@@ -331,8 +333,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                     });
                 }else{
                     Votes vote = new Votes(email);
-                    answerList[answerIndex].downVote = databaseReference.child(widget.QuestionKey).child("answer")
-                      .child(answerList[answerIndex].key).child('downVoters').push().key;
+                    setState(() {
+                      answerList[answerIndex].downVote = databaseReference.child(widget.QuestionKey).child("answer")
+                        .child(answerList[answerIndex].key).child('downVoters').push().key;
+                    });
                     databaseReference.child(widget.QuestionKey).child("answer")
                       .child(answerList[answerIndex].key).child('downVoters').child(answerList[answerIndex].downVote).set(vote.toJson());  
                 }

@@ -8,6 +8,7 @@ import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'AddQuestion.dart';
 import 'giveAnswer.dart';
@@ -24,16 +25,16 @@ class _HomeState extends State<Home> {
   DatabaseReference databaseReference,databaseReferenceTwo;
   List<Answer> answerlist;
   String email;
+  String userKey;
+  User user;
 
-  
-  List<String> upVoters = new List();
-  List<String> downVoters = new List();
 
   @override
   void initState() {
     super.initState();
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
+    database.reference().child("userDetails").onChildAdded.listen(getTheUser);
   }
 
   @override
@@ -54,7 +55,36 @@ class _HomeState extends State<Home> {
                           child: new Icon(Icons.person_outline,size: 55,color: Colors.white,),
                         ),
                       ),
-                      Text("sfsfss"),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(FontAwesomeIcons.github),
+                            onPressed: (){},
+                          ),
+                          Text(
+                            user.github,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(FontAwesomeIcons.linkedin),
+                            onPressed: (){},
+                          ),
+                          Text(
+                            user.linkedin
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text("Points : "),
+                          Text(
+                            user.points.toString(),
+                          ),
+                        ],
+                      ),
                       IconButton(
                         icon: Icon(
                             Icons.edit,
@@ -181,9 +211,16 @@ class _HomeState extends State<Home> {
       );
     }else{
       email =  prefs.getString('userEmail');
-      String userKey = prefs.getString('userKey');
+      userKey = prefs.getString('userKey');
      
     }
+  }
+
+   void getTheUser(Event event){
+     User thisuser = User.fromSnapshot(event.snapshot);
+     if(userKey == thisuser.key){
+       user = thisuser;
+     } 
   }
 
   Widget voteupdown(DataSnapshot snapshot){
