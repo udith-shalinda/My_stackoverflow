@@ -23,9 +23,13 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
   List<User> userList = List();
   String useremail;
   var _formKey = GlobalKey<FormState>();
-  String _username="ss";
+  String _username="";
   String _github="";
   String _linkedIn="";
+  String userKey;
+  var userNameControler = new TextEditingController();
+  var githubControler = new TextEditingController();
+  var linkedInControler = new TextEditingController();
 
 
   @override
@@ -60,7 +64,8 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: TextFormField(
-                        initialValue: _username,
+                        controller: userNameControler,
+                        // initialValue: _username,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -89,7 +94,8 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: TextFormField(
-                        initialValue: _github,
+                        controller: githubControler,
+                        // initialValue: _github,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -118,7 +124,8 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: TextFormField(
-                        initialValue: _linkedIn,
+                        controller: linkedInControler,
+                        // initialValue: _linkedIn,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -185,16 +192,16 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
       );
     }else{
       useremail =  prefs.getString('userEmail');
+      userKey = prefs.getString("userKey");
     }
   }
   _getUserDetails(Event event){
-    userList.add(User.fromSnapshot(event.snapshot));
     if(event.snapshot.value['email'] == useremail){
       setState(() {
-        _username = event.snapshot.value['name'];
-        _github = event.snapshot.value['github'];
-        _linkedIn = event.snapshot.value['linkedin'];
         key = event.snapshot.key;
+        userNameControler.text = event.snapshot.value['name'];
+        githubControler.text = event.snapshot.value['github'];
+        linkedInControler.text = event.snapshot.value['linkedin'];
       });
     }
   }

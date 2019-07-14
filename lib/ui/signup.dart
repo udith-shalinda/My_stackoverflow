@@ -24,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   var _formKey = GlobalKey<FormState>();
   String _email;
   String _formpassword;
+  String newUserKey ="";
 
 
   @override
@@ -160,6 +161,8 @@ class _SignUpState extends State<SignUp> {
         createUser();
         incorrectPassword = false;
         prefs.setString("userEmail", _email);
+        prefs.setString("userKey",newUserKey);
+        
         var router = new MaterialPageRoute(
             builder: (BuildContext context){
               return new UserDetailsForm();
@@ -176,6 +179,7 @@ class _SignUpState extends State<SignUp> {
   void createUser(){
     databaseReference = database.reference().child("userDetails");
     User user = new User("",_email,"","",0);
-    databaseReference.push().set(user.toJson());
+    newUserKey = databaseReference.push().key;
+    databaseReference.child(newUserKey).set(user.toJson());
   }
 }
