@@ -326,7 +326,10 @@ class _HomeState extends State<Home> {
       );
   }
   Widget buttonSet(DataSnapshot snapshot){
+    Question question = Question.fromSnapshot(snapshot);
+    int voters = question.votes;
     String answerCount = snapshot.value['answer'] != null? snapshot.value['answer'].length.toString() : "0";
+    
     return Row(
       children: <Widget>[
         Padding(
@@ -335,7 +338,7 @@ class _HomeState extends State<Home> {
             alignment: Alignment.center,
             color: Colors.grey,
             padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
-            child: Text("votes :" + snapshot.value['votes'].toString()),
+            child: Text("votes :" + voters.toString()),
           ),
         ),
         Container(
