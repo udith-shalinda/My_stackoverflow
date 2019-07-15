@@ -437,13 +437,25 @@ class _GiveAnswerState extends State<GiveAnswer> {
         TextField(
           controller: answer,
           decoration: new InputDecoration(
-              labelText: "Enter your answer"
+              labelText: "Enter your answer",
+              border: new OutlineInputBorder(
+              borderSide: new BorderSide(color: Colors.teal),
+              // borderRadius: BorderRadius.circular(25.0),
+            ),
           ),
+          
         ),
-        TextField(
-          controller: answerDescription,
-          decoration: new InputDecoration(
-              labelText: "Enter your answer description"
+        Padding(
+          padding: const EdgeInsets.only(top:12.0),
+          child: TextField(
+            controller: answerDescription,
+            decoration: new InputDecoration(
+                labelText: "Enter your answer description",
+                border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                // borderRadius: BorderRadius.circular(25.0),
+              ),
+            ),
           ),
         ),
         RaisedButton(
