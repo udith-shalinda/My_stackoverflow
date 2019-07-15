@@ -59,6 +59,17 @@ class _HomeState extends State<Home> {
                       Row(
                         children: <Widget>[
                           IconButton(
+                            icon: Icon(Icons.person),
+                            onPressed: (){},
+                          ),
+                          Text(
+                            user.name,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
                             icon: Icon(FontAwesomeIcons.github),
                             onPressed: (){},
                           ),
@@ -80,9 +91,12 @@ class _HomeState extends State<Home> {
                       ),
                       Row(
                         children: <Widget>[
-                          Text("Points : "),
+                          IconButton(
+                            icon: Icon(FontAwesomeIcons.handPointer),
+                            onPressed: (){},
+                          ),
                           Text(
-                            user.points.toString(),
+                            "Points : "+user.points.toString(),
                           ),
                         ],
                       ),
