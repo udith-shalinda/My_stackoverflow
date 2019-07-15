@@ -35,6 +35,8 @@ class _HomeState extends State<Home> {
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
     database.reference().child("userDetails").onChildAdded.listen(getTheUser);
+    database.reference().child("userDetails").onChildChanged.listen(getTheUser);
+
   }
 
   @override
@@ -52,7 +54,7 @@ class _HomeState extends State<Home> {
                         ),
                         child: new CircleAvatar(
                           radius: 45.0,
-                          child: new Icon(Icons.person_outline,size: 55,color: Colors.white,),
+                          child: profileImage(),
                         ),
                       ),
                       Row(
@@ -351,6 +353,30 @@ class _HomeState extends State<Home> {
       ],
     );
   }
+  Widget profileImage(){
+     if(user.profileLink != null && user.profileLink != ""){
+        return Container(
+              width: 135.0,
+              height: 190.0,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      fit: BoxFit.fill,
+                      image: new NetworkImage(
+                          user.profileLink
+                      ),
+                  ),
+              ),
+          );
+     }else{
+       return Icon(
+         Icons.person_outline,
+         size: 55,
+         color: Colors.white,
+         );
+     }
+  }
+
   void editProfile(){
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
