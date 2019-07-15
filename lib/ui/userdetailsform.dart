@@ -246,7 +246,10 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
     FirebaseStorage.instance.ref().child(useremail);
     if(imageFile != null){
       StorageUploadTask uploadTask = ref.putFile(imageFile);
-      profileImageLink = await (await uploadTask.onComplete).ref.getDownloadURL();
+      String profile = await (await uploadTask.onComplete).ref.getDownloadURL();
+      setState(() {
+       profileImageLink = profile; 
+      });
       databaseReference.child(key).child('profileLink').set(profileImageLink);
       return profileImageLink;
     }else{

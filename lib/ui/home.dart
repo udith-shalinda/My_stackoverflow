@@ -22,8 +22,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
-  DatabaseReference databaseReference,databaseReferenceTwo;
-  List<Answer> answerlist;
+  DatabaseReference databaseReference;
   String email;
   String userKey;
   User user = new User("","","","",0,"");
@@ -141,25 +140,7 @@ class _HomeState extends State<Home> {
 //                                          child: new Text(snapshot.value['email'].substring(5,10)),
 //                                        ),
 //                                      ),
-                                      title: Align(
-                                        child: Container(
-                                          padding: EdgeInsets.only(top: 10),
-                                          child:Row(
-                                            children: <Widget>[
-                                              CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundColor: Colors.black,
-                                                child: new Text(snapshot.value['user'].substring(5,10)),
-                                              ),
-                                              Text(
-                                                "   "+snapshot.value['user'].toString(),
-                                                style: TextStyle(color: Colors.black),
-                                              ),
-                                            ],
-                                          )
-                                        ),
-                                        alignment: FractionalOffset.topLeft,
-                                      ),
+                                      title: setTitleQuestion(snapshot),
                                       subtitle: Container(
                                         alignment: FractionalOffset.topLeft,
                                         padding: EdgeInsets.only(top: 30),
@@ -218,7 +199,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-   Future getTheUser(Event event){
+   void getTheUser(Event event){
      User thisuser = User.fromSnapshot(event.snapshot);
      if(userKey == thisuser.key){
        setState(() {
@@ -226,6 +207,37 @@ class _HomeState extends State<Home> {
        });
      } 
   }
+
+  Widget setTitleQuestion(DataSnapshot snapshot){
+    String profileLink;
+    String userName = "";
+    Question question = Question.fromSnapshot(snapshot);
+    //  database.reference().child("userDetails").child(question.user).child('name').once().then((result){
+    //    print(result.value);
+    //    userName = result.value;
+    //  });
+
+    return Align(
+      child: Container(
+        padding: EdgeInsets.only(top: 10),
+        child:Row(
+          children: <Widget>[
+            CircleAvatar(
+              radius: 30.0,
+              backgroundColor: Colors.black,
+              child: new Text(snapshot.value['user'].substring(5,10)),
+            ),
+            Text(
+              "   " + snapshot.value['user'].toString(),
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        )
+      ),
+      alignment: FractionalOffset.topLeft,
+    );
+  }
+  
 
   Widget voteupdown(DataSnapshot snapshot){
     String upVoted = "";

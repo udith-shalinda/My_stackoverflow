@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
+import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,6 +30,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
   List<Answer> answerList = new List();
   String upVoted= "";
   String downVoted = "";
+  String profileLink;
+  String userName;
 
   String email;
   String userKey;
@@ -85,10 +88,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                           CircleAvatar(
                             radius: 30.0,
                             backgroundColor: Colors.black,
-                            child: new Text("sgsfsf"),
+                            child: profileImage(),
                           ),
                           Text(
-                            "  " + question.user,
+                            userName!= null? "  " + userName:(" " + question.user),
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -181,6 +184,16 @@ class _GiveAnswerState extends State<GiveAnswer> {
           });
       }
     }
+    //set profile picture
+    database.reference().child("userDetails").child(question.user).once().then((result){
+      if(result.value != null){
+        User userone = User.fromSnapshot(result); 
+        setState(() {
+          userName = userone.name;
+          profileLink = userone.profileLink;          
+        });
+      }
+    });
   }
   void setAnswers(Event event){
     setState(() {
@@ -208,7 +221,30 @@ class _GiveAnswerState extends State<GiveAnswer> {
       answerList.add(oneAnswer);
     });
   }
-  
+  Widget profileImage(){
+     if(profileLink != null ){
+        return Container(
+              width: 135.0,
+              height: 190.0,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      fit: BoxFit.fill,
+                      image: new NetworkImage(
+                          profileLink
+                      ),
+                  ),
+              ),
+          );
+     }else{
+       return Icon(
+         Icons.person_outline,
+         size: 55,
+         color: Colors.white,
+         );
+     }
+  }
+
   Widget voteupdownQuestion(String key,int votes){
     
     return Container(
