@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   List<Answer> answerlist;
   String email;
   String userKey;
-  User user = new User("","","","",0);
+  User user = new User("","","","",0,"");
 
 
   @override

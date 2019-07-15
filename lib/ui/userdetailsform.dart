@@ -62,6 +62,20 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                 child: Column(
                   children: <Widget>[
                     Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        radius: 45.0,
+                        backgroundColor: Colors.black,
+                        child: Icon(Icons.person),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.camera_alt),
+                      onPressed: (){
+                        _pickSaveImage();
+                      },
+                      ),
+                    Padding(
                       padding: EdgeInsets.all(20.0),
                       child: TextFormField(
                         controller: userNameControler,
@@ -162,17 +176,6 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                       ),
                       textColor: Colors.white70,
                     ),
-                    RaisedButton(
-                      onPressed: _pickSaveImage,
-                      color: Color.fromRGBO(52, 66, 86, 1),
-                      child: Text(
-                        'upload image',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      textColor: Colors.white70,
-                    )
                   ],
                 ),
               )
@@ -222,10 +225,15 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
     File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     StorageReference ref =
     FirebaseStorage.instance.ref().child(useremail);
-    StorageUploadTask uploadTask = ref.putFile(imageFile);
-    print(await (await uploadTask.onComplete).ref.getDownloadURL());
-    return await (await uploadTask.onComplete).ref.getDownloadURL();
+    if(imageFile != null){
+      StorageUploadTask uploadTask = ref.putFile(imageFile);
+      databaseReference.child(key).child('profileLink').set(await (await uploadTask.onComplete).ref.getDownloadURL());
+      return await (await uploadTask.onComplete).ref.getDownloadURL();
+    }else{
+      return "error";
+    }
   }
+
   void saveButtonClickec(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();

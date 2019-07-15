@@ -7,8 +7,9 @@ class User {
   String linkedin;
   String email;
   int points;
+  String profileLink;
 
-  User(this.name,this.email,this.github,this.linkedin,this.points);
+  User(this.name,this.email,this.github,this.linkedin,this.points,this.profileLink);
 
   User.fromSnapshot(DataSnapshot snapshot):
         key = snapshot.key,
@@ -16,7 +17,8 @@ class User {
         email = snapshot.value['email'],
         github = snapshot.value['github'],
         points = snapshot.value['points'],
-        linkedin = snapshot.value['linkedin'];
+        linkedin = snapshot.value['linkedin'],
+        profileLink = snapshot.value['profileLink'];
 
 
   toJson(){
@@ -25,7 +27,8 @@ class User {
       "email" :email,
       "github" : github,
       "linkedin" : linkedin,
-      "points" : points
+      "points" : points,
+      "profileLink" : profileLink
     };
   }
 
