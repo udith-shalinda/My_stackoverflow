@@ -18,9 +18,7 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference databaseReference ;
-  User user;
   String key;
-  List<User> userList = List();
   String useremail;
   var _formKey = GlobalKey<FormState>();
   String _username="";
@@ -30,6 +28,7 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
   var userNameControler = new TextEditingController();
   var githubControler = new TextEditingController();
   var linkedInControler = new TextEditingController();
+  String profileImageLink;
 
 
   @override
@@ -66,7 +65,7 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                       child: CircleAvatar(
                         radius: 45.0,
                         backgroundColor: Colors.black,
-                        child: Icon(Icons.person),
+                        child: profileImage(),
                       ),
                     ),
                     IconButton(
@@ -205,8 +204,28 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
         userNameControler.text = event.snapshot.value['name'];
         githubControler.text = event.snapshot.value['github'];
         linkedInControler.text = event.snapshot.value['linkedin'];
+        profileImageLink = event.snapshot.value['profileLink'];
       });
     }
+  }
+  Widget profileImage(){
+     if(profileImageLink != null){
+        return Container(
+              width: 135.0,
+              height: 190.0,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      fit: BoxFit.fill,
+                      image: new NetworkImage(
+                          profileImageLink
+                      ),
+                  ),
+              ),
+          );
+     }else{
+       return Icon(Icons.person);
+     }
   }
   void uploadUserDetails(){
     databaseReference.child(key).child('name').set(_username);
@@ -227,8 +246,9 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
     FirebaseStorage.instance.ref().child(useremail);
     if(imageFile != null){
       StorageUploadTask uploadTask = ref.putFile(imageFile);
-      databaseReference.child(key).child('profileLink').set(await (await uploadTask.onComplete).ref.getDownloadURL());
-      return await (await uploadTask.onComplete).ref.getDownloadURL();
+      profileImageLink = await (await uploadTask.onComplete).ref.getDownloadURL();
+      databaseReference.child(key).child('profileLink').set(profileImageLink);
+      return profileImageLink;
     }else{
       return "error";
     }
