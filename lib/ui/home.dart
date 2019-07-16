@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +122,16 @@ class _HomeState extends State<Home> {
                             size: 34,
                         ),
                         onPressed: editProfile,
-                      )
+                      ),
+                      IconButton(
+                        icon: Icon(
+                            FontAwesomeIcons.signOutAlt,
+                            color: Colors.white,
+                            size: 34,
+                        ),
+                        onPressed: signout,
+                      ),
+                      
                     ],
                   ),
                 ),
@@ -473,5 +483,22 @@ class _HomeState extends State<Home> {
           return new GiveAnswer(QuestionKey: key,);
         });
     Navigator.of(context).push(router);
+  }
+  Future signout() async {
+     await FirebaseAuth.instance.signOut();
+     final prefs = await SharedPreferences.getInstance();
+     prefs.clear();
+
+//     var router = new MaterialPageRoute(
+//         builder: (BuildContext context){
+//           return new LoginPage();
+//         });
+//     Navigator.of(context).push(router);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+            (Route<dynamic> route) => false,
+    );
+
   }
 }
