@@ -176,7 +176,7 @@ class _HomeState extends State<Home> {
                                           ],
                                         ),
                                       ),
-                                      //trailing: voteupdown(),
+                                      trailing: new Icon(Icons.more_horiz, color: Colors.black, size: 30.0),
 
                                       onTap: (){
                                         showQuestion(snapshot.key);
@@ -225,7 +225,6 @@ class _HomeState extends State<Home> {
   }
   void getQuestionUsers(Event event){
       database.reference().child("userDetails").child(event.snapshot.value['user']).once().then((result){
-       print(result.value);
        setState(() {
         questionUsers.add(User.fromSnapshot(result)); 
        });

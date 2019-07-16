@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
+import 'package:my_stackoverflow/modle/myQuestionKey.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -157,7 +158,12 @@ class AddQuestionState extends State<AddQuestion> {
   }
 
   void uploadQuestion(){
-    databaseReference.push().set(createQuestion.toJson());
+    String questionKey = databaseReference.push().key;
+    databaseReference.child(questionKey).set(createQuestion.toJson());
+    //add a question key to owners qustionList
+    MyQuestionKey myQuestionKey = new MyQuestionKey(questionKey);
+    database.reference().child('userDetails').child(userKey).child('myQuestionList').push().set(myQuestionKey.toJson());
+
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
           return new Home();

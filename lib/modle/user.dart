@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:my_stackoverflow/modle/myQuestionKey.dart';
 
 class User {
   String key;
@@ -8,6 +9,7 @@ class User {
   String email;
   int points;
   String profileLink;
+  List<MyQuestionKey> myQuestionList;
 
   User(this.name,this.email,this.github,this.linkedin,this.points,this.profileLink);
 
