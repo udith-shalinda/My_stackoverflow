@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
   String userKey;
   User user = new User("","","","",0,"");
   List<User> questionUsers = new List();
+  int noOfUserQuestions = 0;
 
 
   @override
@@ -88,6 +89,17 @@ class _HomeState extends State<Home> {
                           ),
                           Text(
                             user.linkedin,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(FontAwesomeIcons.questionCircle),
+                            onPressed: (){},
+                          ),
+                          Text(
+                            noOfUserQuestions.toString(),
                           ),
                         ],
                       ),
@@ -221,6 +233,11 @@ class _HomeState extends State<Home> {
        setState(() {
         user = thisuser; 
        });
+       if(event.snapshot.value['myQuestionList'] != null){
+          setState(() {
+           noOfUserQuestions =  event.snapshot.value['myQuestionList'].length;
+          });
+        }
      } 
   }
   void getQuestionUsers(Event event){
