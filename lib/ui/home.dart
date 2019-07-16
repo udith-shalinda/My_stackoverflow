@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   String email;
   String userKey;
   User user = new User("","","","",0,"");
+  List<User> questionUsers = new List();
 
 
   @override
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
     super.initState();
     getSharedPreference();
     databaseReference = database.reference().child("Questions");
+    databaseReference.onChildAdded.listen(getQuestionUsers);
     database.reference().child("userDetails").onChildAdded.listen(getTheUser);
     database.reference().child("userDetails").onChildChanged.listen(getTheUser);
 
@@ -53,7 +55,7 @@ class _HomeState extends State<Home> {
                         ),
                         child: new CircleAvatar(
                           radius: 45.0,
-                          child: profileImage(),
+                          child: userProfileImage(),
                         ),
                       ),
                       Row(
@@ -154,7 +156,7 @@ class _HomeState extends State<Home> {
 //                                          child: new Text(snapshot.value['email'].substring(5,10)),
 //                                        ),
 //                                      ),
-                                      title: setTitleQuestion(snapshot),
+                                      title: setTitleQuestion(snapshot,index),
                                       subtitle: Container(
                                         alignment: FractionalOffset.topLeft,
                                         padding: EdgeInsets.only(top: 30),
@@ -221,16 +223,25 @@ class _HomeState extends State<Home> {
        });
      } 
   }
+  void getQuestionUsers(Event event){
+      database.reference().child("userDetails").child(event.snapshot.value['user']).once().then((result){
+       print(result.value);
+       setState(() {
+        questionUsers.add(User.fromSnapshot(result)); 
+       });
+      });
+  }
 
-  Widget setTitleQuestion(DataSnapshot snapshot){
-    String profileLink;
-    String userName = "";
-    Question question = Question.fromSnapshot(snapshot);
-    //  database.reference().child("userDetails").child(question.user).child('name').once().then((result){
-    //    print(result.value);
-    //    userName = result.value;
-    //  });
-
+  Widget setTitleQuestion(DataSnapshot snapshot,int index){
+    String userName;
+    String questionProfileLink;
+    if(questionUsers.length < index+1){
+      userName = "";
+      questionProfileLink = "";
+    }else{
+      userName = questionUsers[index].name;
+      questionProfileLink = questionUsers[index].profileLink;
+    }
     return Align(
       child: Container(
         padding: EdgeInsets.only(top: 10),
@@ -239,10 +250,10 @@ class _HomeState extends State<Home> {
             CircleAvatar(
               radius: 30.0,
               backgroundColor: Colors.black,
-              child: new Text(snapshot.value['user'].substring(5,10)),
+              child: questionProfileImage(questionProfileLink),
             ),
             Text(
-              "   " + snapshot.value['user'].toString(),
+              "   " + userName,
               style: TextStyle(color: Colors.black),
             ),
           ],
@@ -379,7 +390,7 @@ class _HomeState extends State<Home> {
       ],
     );
   }
-  Widget profileImage(){
+  Widget userProfileImage(){
      if(user.profileLink != null && user.profileLink != ""){
         return Container(
               width: 135.0,
@@ -398,6 +409,28 @@ class _HomeState extends State<Home> {
        return Icon(
          Icons.person_outline,
          size: 55,
+         color: Colors.white,
+         );
+     }
+  }
+  Widget questionProfileImage(String profileLink){
+     if(profileLink != ""){
+        return Container(
+              width: 135.0,
+              height: 190.0,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                      fit: BoxFit.fill,
+                      image: new NetworkImage(
+                          profileLink
+                      ),
+                  ),
+              ),
+          );
+     }else{
+       return Icon(
+         Icons.person_outline,
          color: Colors.white,
          );
      }
