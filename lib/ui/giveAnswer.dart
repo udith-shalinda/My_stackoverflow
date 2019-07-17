@@ -32,6 +32,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
   String downVoted = "";
   String profileLink;
   String userName;
+  bool isMyQuestion = false;
 
   String email;
   String userKey;
@@ -192,6 +193,9 @@ class _GiveAnswerState extends State<GiveAnswer> {
           userName = userone.name;
           profileLink = userone.profileLink;          
         });
+        if(userone.email == email){
+          isMyQuestion = true;
+        }
       }
     });
   }
@@ -256,7 +260,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             color: upVoted != "" ? Colors.orange: Colors.blueGrey,
             onPressed: (){
               setState(() {
-                if(upVoted == ""){
+                if(upVoted == "" && !isMyQuestion){
                   if(downVoted != ""){
                     databaseReference.child(widget.QuestionKey).child('downVoters').child(downVoted).remove();
                     downVoted = "";
@@ -286,7 +290,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: downVoted != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              if(downVoted == ""){
+              if(downVoted == "" && !isMyQuestion){
                 if(upVoted != ""){
                       databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).remove();
                       upVoted = "";
