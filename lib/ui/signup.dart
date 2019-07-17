@@ -5,7 +5,6 @@ import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'home.dart';
 
 
 
@@ -26,11 +25,6 @@ class _SignUpState extends State<SignUp> {
   String _formpassword;
   String newUserKey ="";
 
-
-  @override
-  void initState() {
-
-  }
 
   @override
   Widget build(BuildContext context) {

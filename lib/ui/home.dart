@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
@@ -244,7 +243,7 @@ class _HomeState extends State<Home> {
         user = thisuser; 
        });
        if(event.snapshot.value['myQuestionList'] != null){
-          setState(() {
+         setState(() {
            noOfUserQuestions =  event.snapshot.value['myQuestionList'].length;
           });
         }
@@ -302,7 +301,7 @@ class _HomeState extends State<Home> {
     if(questionUsers.length >= index+1){
       if(email == questionUsers[index].email){
         questionOwner = email;
-      };
+      }
     }
     
 
@@ -488,7 +487,7 @@ class _HomeState extends State<Home> {
     print("key is "+key);
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
-          return new GiveAnswer(QuestionKey: key,);
+          return new GiveAnswer(questionKey: key,);
         });
     Navigator.of(context).push(router);
   }

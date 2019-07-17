@@ -2,7 +2,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/modle/myQuestionKey.dart';
-import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
@@ -116,7 +115,7 @@ class AddQuestionState extends State<AddQuestion> {
                     ),
                   ),
                   RaisedButton(
-                    onPressed: AddQuestionButton ,
+                    onPressed: addQuestionButton ,
                     color: Color.fromRGBO(52, 66, 86, 1),
                     child: Text(
                       'Post',
@@ -149,7 +148,7 @@ class AddQuestionState extends State<AddQuestion> {
     }
   }
 
-  void AddQuestionButton(){
+  void addQuestionButton(){
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       createQuestion.user = userKey;

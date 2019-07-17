@@ -10,8 +10,8 @@ import 'login.dart';
 
 class GiveAnswer extends StatefulWidget {
 
-  String QuestionKey;
-  GiveAnswer({Key  key, this.QuestionKey}):super(key:key);
+  final String questionKey;
+  GiveAnswer({Key  key, this.questionKey}):super(key:key);
 
 
   @override
@@ -49,7 +49,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
     question = new Question("fsfs", "", "", null,0,0,null,null);
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestion);
-    databaseReference.child(widget.QuestionKey).child("answer").onChildAdded.listen(setAnswers);
+    databaseReference.child(widget.questionKey).child("answer").onChildAdded.listen(setAnswers);
   }
 
   @override
@@ -162,10 +162,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   void setQuestion(Event event){
-    if(event.snapshot.key == widget.QuestionKey){
-      setState(() {
+    if(event.snapshot.key == widget.questionKey){
+      // setState(() {
         question = Question.fromSnapshot(event.snapshot);
-      });
+      // });
         Map<dynamic,dynamic> mapUpVote = new Map();
         if(event.snapshot.value['upVoters'] != null){
           mapUpVote = event.snapshot.value['upVoters'];
@@ -200,9 +200,8 @@ class _GiveAnswerState extends State<GiveAnswer> {
     });
   }
   void setAnswers(Event event){
-    setState(() {
+    
       Answer oneAnswer = Answer.fromSnapshot(event.snapshot);
-      //oneAnswer.upVoters = "";
 
        Map<dynamic,dynamic> mapUpVote = new Map();
         if(event.snapshot.value['upVoters'] != null){
@@ -222,6 +221,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             }
           });
       }
+    setState(() {
       answerList.add(oneAnswer);
     });
   }
@@ -262,13 +262,13 @@ class _GiveAnswerState extends State<GiveAnswer> {
               setState(() {
                 if(upVoted == "" && !isMyQuestion){
                   if(downVoted != ""){
-                    databaseReference.child(widget.QuestionKey).child('downVoters').child(downVoted).remove();
+                    databaseReference.child(widget.questionKey).child('downVoters').child(downVoted).remove();
                     downVoted = "";
                     question.votes++;
                   }else{
                     Votes vote = new Votes(email);
-                    upVoted = databaseReference.child(widget.QuestionKey).child('upVoters').push().key;
-                    databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).set(vote.toJson());
+                    upVoted = databaseReference.child(widget.questionKey).child('upVoters').push().key;
+                    databaseReference.child(widget.questionKey).child('upVoters').child(upVoted).set(vote.toJson());
                     question.votes++;
                   }
                   //give points to the question owner;
@@ -292,15 +292,15 @@ class _GiveAnswerState extends State<GiveAnswer> {
             onPressed: (){
               if(downVoted == "" && !isMyQuestion){
                 if(upVoted != ""){
-                      databaseReference.child(widget.QuestionKey).child('upVoters').child(upVoted).remove();
+                      databaseReference.child(widget.questionKey).child('upVoters').child(upVoted).remove();
                       upVoted = "";
                       setState(() {
                       question.votes--;
                     });
                 }else{
                     Votes vote = new Votes(email);
-                    downVoted = databaseReference.child(widget.QuestionKey).child('downVoters').push().key;
-                    databaseReference.child(widget.QuestionKey).child('downVoters').child(downVoted).set(vote.toJson());
+                    downVoted = databaseReference.child(widget.questionKey).child('downVoters').push().key;
+                    databaseReference.child(widget.questionKey).child('downVoters').child(downVoted).set(vote.toJson());
                     setState(() {
                       question.votes--;
                     });
@@ -336,7 +336,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
                   answerList[answerIndex].votes++;
                 });
                 if(answerList[answerIndex].downVote != ""){
-                      databaseReference.child(widget.QuestionKey).child("answer")
+                      databaseReference.child(widget.questionKey).child("answer")
                       .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].downVote).remove();
                       setState(() {
                         answerList[answerIndex].downVote = "";
@@ -344,10 +344,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                 }else{
                     Votes vote = new Votes(email);
                     setState(() {
-                      answerList[answerIndex].upVote = databaseReference.child(widget.QuestionKey).child("answer")
+                      answerList[answerIndex].upVote = databaseReference.child(widget.questionKey).child("answer")
                         .child(answerList[answerIndex].key).child('upVoters').push().key; 
                     });
-                    databaseReference.child(widget.QuestionKey).child("answer")
+                    databaseReference.child(widget.questionKey).child("answer")
                       .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].upVote).set(vote.toJson());  
                 }
                 //give points to the question owner;
@@ -371,7 +371,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
               if(answerList[answerIndex].downVote == "" && !isMyAnswer){
                 answerList[answerIndex].votes--;
                 if(answerList[answerIndex].upVote != ""){
-                      databaseReference.child(widget.QuestionKey).child("answer")
+                      databaseReference.child(widget.questionKey).child("answer")
                       .child(answerList[answerIndex].key).child('upVoters').child(answerList[answerIndex].upVote).remove();
                       setState(() {
                         answerList[answerIndex].upVote = "";
@@ -379,10 +379,10 @@ class _GiveAnswerState extends State<GiveAnswer> {
                 }else{
                     Votes vote = new Votes(email);
                     setState(() {
-                      answerList[answerIndex].downVote = databaseReference.child(widget.QuestionKey).child("answer")
+                      answerList[answerIndex].downVote = databaseReference.child(widget.questionKey).child("answer")
                         .child(answerList[answerIndex].key).child('downVoters').push().key;
                     });
-                    databaseReference.child(widget.QuestionKey).child("answer")
+                    databaseReference.child(widget.questionKey).child("answer")
                       .child(answerList[answerIndex].key).child('downVoters').child(answerList[answerIndex].downVote).set(vote.toJson());  
                 }
                 database.reference().child("userDetails").child(answerList[answerIndex].user).once().then((result){
@@ -484,7 +484,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
       finalAnswer.answer = answer.text;
       finalAnswer.comment = answerDescription.text;
       finalAnswer.user = userKey;
-      databaseReference.child(widget.QuestionKey).child("answer").push().set(finalAnswer.toJson());
+      databaseReference.child(widget.questionKey).child("answer").push().set(finalAnswer.toJson());
       answer.text = "";
       answerDescription.text = "";
       addAnswer = false;
