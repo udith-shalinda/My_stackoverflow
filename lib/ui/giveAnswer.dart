@@ -318,6 +318,11 @@ class _GiveAnswerState extends State<GiveAnswer> {
   }
 
   Widget voteupdownAnswers(int answerIndex){
+    bool isMyAnswer= false;
+    if(answerList[answerIndex].user == userKey){
+      isMyAnswer = true;
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -326,7 +331,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color:  answerList[answerIndex].upVote  != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              if(answerList[answerIndex].upVote == ""){
+              if(answerList[answerIndex].upVote == "" && !isMyAnswer){
                 setState(() {
                   answerList[answerIndex].votes++;
                 });
@@ -363,7 +368,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
             iconSize: 50,
             color: answerList[answerIndex].downVote != "" ? Colors.orange:Colors.blueGrey,
             onPressed: (){
-              if(answerList[answerIndex].downVote == ""){
+              if(answerList[answerIndex].downVote == "" && !isMyAnswer){
                 answerList[answerIndex].votes--;
                 if(answerList[answerIndex].upVote != ""){
                       databaseReference.child(widget.QuestionKey).child("answer")
