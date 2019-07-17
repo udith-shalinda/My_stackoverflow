@@ -187,7 +187,7 @@ class _HomeState extends State<Home> {
                                             Row(
                                               children: <Widget>[
                                                 Flexible(
-                                                  child:voteupdown(snapshot),
+                                                  child:voteupdown(snapshot,index),
                                                 ),
                                                 Flexible(
                                                   child: questionandAnswer(snapshot),
@@ -290,12 +290,20 @@ class _HomeState extends State<Home> {
   }
   
 
-  Widget voteupdown(DataSnapshot snapshot){
+  Widget voteupdown(DataSnapshot snapshot,int index){
     String upVoted = "";
     String downVoted = "";
     int voters;
+    String questionOwner = "";
     Question question = Question.fromSnapshot(snapshot);
     voters = question.votes;
+
+    //check wether the question is mine or not before voting
+    if(questionUsers.length >= index+1){
+      if(email == questionUsers[index].email){
+        questionOwner = email;
+      };
+    }
     
 
     Map<dynamic,dynamic> mapUpVote = new Map();
@@ -325,7 +333,7 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: upVoted != "" ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              if(upVoted == ""){
+              if(upVoted == "" && questionOwner == ""){
                 if(downVoted != ""){
                     databaseReference.child(snapshot.key).child('downVoters').child(downVoted).remove();              
                 }else{
@@ -352,7 +360,7 @@ class _HomeState extends State<Home> {
             iconSize: 50,
             color: downVoted != "" ? Colors.orange : Colors.blueGrey,
             onPressed: (){
-              if(downVoted == ""){
+              if(downVoted == "" && questionOwner == ""){
                   if(upVoted != ""){
                     databaseReference.child(snapshot.key).child('upVoters').child(upVoted).remove();
                   }else{
@@ -488,12 +496,6 @@ class _HomeState extends State<Home> {
      await FirebaseAuth.instance.signOut();
      final prefs = await SharedPreferences.getInstance();
      prefs.clear();
-
-//     var router = new MaterialPageRoute(
-//         builder: (BuildContext context){
-//           return new LoginPage();
-//         });
-//     Navigator.of(context).push(router);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Login()),
