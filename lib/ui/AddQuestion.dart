@@ -161,7 +161,8 @@ class AddQuestionState extends State<AddQuestion> {
     databaseReference.child(questionKey).set(createQuestion.toJson());
     //add a question key to owners qustionList
     MyQuestionKey myQuestionKey = new MyQuestionKey(questionKey);
-    database.reference().child('userDetails').child(userKey).child('myQuestionList').push().set(myQuestionKey.toJson());
+    database.reference().child('userDetails').child(userKey).child('myQuestionList').child(questionKey).set(myQuestionKey.toJson());
+      
 
     var router = new MaterialPageRoute(
         builder: (BuildContext context){

@@ -193,11 +193,11 @@ class _HomeState extends State<Home> {
                                                 ),
                                               ],
                                             ),
-                                            buttonSet(snapshot),
+                                            buttonSet(snapshot,index),
                                           ],
                                         ),
                                       ),
-                                      trailing: new Icon(Icons.more_horiz, color: Colors.black, size: 30.0),
+                                      trailing: new Icon(Icons.arrow_right, color: Colors.grey, size: 50.0),
 
                                       onTap: (){
                                         showQuestion(snapshot.key);
@@ -397,7 +397,15 @@ class _HomeState extends State<Home> {
         ],
       );
   }
-  Widget buttonSet(DataSnapshot snapshot){
+  Widget buttonSet(DataSnapshot snapshot ,int index){
+    bool isQuestionOwner = false;
+//check wether the question is mine or not before voting
+    if(questionUsers.length >= index+1){
+      if(email == questionUsers[index].email){
+        isQuestionOwner = true;
+      }
+    }
+
     Question question = Question.fromSnapshot(snapshot);
     int voters = question.votes;
     String answerCount = snapshot.value['answer'] != null? snapshot.value['answer'].length.toString() : "0";
@@ -413,12 +421,26 @@ class _HomeState extends State<Home> {
             child: Text("votes :" + voters.toString()),
           ),
         ),
-        Container(
-          color: Colors.grey,
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
-          child: Text(
-            "Answers : "+ answerCount
-            ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            color: Colors.grey,
+            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+            child: Text(
+              "Answers : "+ answerCount
+              ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: !isQuestionOwner ? Container():
+           IconButton(
+            icon: Icon(Icons.delete,color: Colors.redAccent,),
+            onPressed: (){
+              databaseReference.child(question.key).remove();
+              database.reference().child('userDetails').child(userKey).child('myQuestionList').child(question.key).remove();
+            },
+          ),
         ),
       ],
     );
