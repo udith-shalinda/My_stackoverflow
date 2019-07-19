@@ -449,8 +449,8 @@ class _HomeState extends State<Home> {
   Widget userProfileImage(){
      if(user.profileLink != null && user.profileLink != ""){
         return Container(
-              width: 135.0,
-              height: 190.0,
+              width: 138.0,
+              height: 138.0,
               decoration: new BoxDecoration(
                   shape: BoxShape.circle,
                   image: new DecorationImage(
@@ -473,7 +473,7 @@ class _HomeState extends State<Home> {
      if(profileLink != ""){
         return Container(
               width: 135.0,
-              height: 190.0,
+              height: 135.0,
               decoration: new BoxDecoration(
                   shape: BoxShape.circle,
                   image: new DecorationImage(

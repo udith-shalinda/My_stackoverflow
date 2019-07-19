@@ -56,58 +56,93 @@ class ProfilePageState extends State<ProfilePage> {
       body: Container(
           child: new ListView(
             children: <Widget>[
+              CircleAvatar(
+                radius: 65.0,
+                child: profileImage(),
+              ),
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.person),
+                    icon: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                    ),
                     onPressed: (){},
                   ),
                   Text(
                     user.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(FontAwesomeIcons.github),
+                    icon: Icon(
+                        FontAwesomeIcons.github,
+                        color: Colors.white,
+                    ),
                     onPressed: (){},
                   ),
                   Text(
                     user.github,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(FontAwesomeIcons.linkedin),
+                    icon: Icon(
+                        FontAwesomeIcons.linkedin,
+                        color: Colors.white,
+                    ),
                     onPressed: (){},
                   ),
                   Text(
                     user.linkedin,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(FontAwesomeIcons.questionCircle),
+                    icon: Icon(
+                      FontAwesomeIcons.questionCircle,
+                      color: Colors.white,
+                    ),
                     onPressed: (){},
                   ),
                   Text(
                     noOfUserQuestions.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(FontAwesomeIcons.handPointer),
+                    icon: Icon(
+                        FontAwesomeIcons.handPointer,
+                        color: Colors.white,
+                    ),
                     onPressed: (){},
                   ),
                   Text(
                     "Points : "+user.points.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+
                   ),
                 ],
               ),
@@ -148,8 +183,8 @@ class ProfilePageState extends State<ProfilePage> {
   Widget profileImage() {
     if (user.profileLink != null) {
       return Container(
-        width: 135.0,
-        height: 190.0,
+        width: 130.0,
+        height: 130.0,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
           image: new DecorationImage(
