@@ -282,7 +282,7 @@ class _HomeState extends State<Home> {
               style: TextStyle(color: Colors.black),
             ),
           ],
-        ),
+        )
       ),
       alignment: FractionalOffset.topLeft,
     );
