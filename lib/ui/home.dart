@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
+import 'package:my_stackoverflow/ui/profilePage.dart';
 import 'package:my_stackoverflow/ui/userdetailsform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -278,9 +279,9 @@ class _HomeState extends State<Home> {
               child: questionProfileImage(questionProfileLink),
             ),
             Text(
-              "   " + userName,
-              style: TextStyle(color: Colors.black),
-            ),
+                "   " + userName,
+                style: TextStyle(color: Colors.black),
+              ),
           ],
         )
       ),
@@ -509,7 +510,7 @@ class _HomeState extends State<Home> {
     print("key is "+key);
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
-          return new GiveAnswer(questionKey: key,);
+          return new GiveAnswer(questionKey: key);
         });
     Navigator.of(context).push(router);
   }
@@ -522,6 +523,6 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(builder: (context) => Login()),
             (Route<dynamic> route) => false,
     );
-
   }
+
 }

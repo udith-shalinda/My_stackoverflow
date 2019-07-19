@@ -1,25 +1,23 @@
-import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:my_stackoverflow/modle/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
 
-class profilePage extends StatefulWidget {
+
+class ProfilePage extends StatefulWidget {
 
   final String questionUserKey;
-  profilePage({Key  key, this.questionUserKey}):super(key:key);
+  ProfilePage({Key  key, this.questionUserKey}):super(key:key);
 
   @override
-  profilePageState createState() => profilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class profilePageState extends State<profilePage> {
+class ProfilePageState extends State<ProfilePage> {
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference databaseReference;
@@ -135,6 +133,7 @@ class profilePageState extends State<profilePage> {
 
   _getUserDetails(Event event) {
     if (event.snapshot.key == widget.questionUserKey) {
+      print(widget.questionUserKey);
       setState(() {
         user = User.fromSnapshot(event.snapshot);
         if(event.snapshot.value['myQuestionList'] != null){

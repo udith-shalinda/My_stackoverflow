@@ -4,6 +4,7 @@ import 'package:my_stackoverflow/modle/Answer.dart';
 import 'package:my_stackoverflow/modle/Question.dart';
 import 'package:my_stackoverflow/modle/user.dart';
 import 'package:my_stackoverflow/modle/votes.dart';
+import 'package:my_stackoverflow/ui/profilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
@@ -11,7 +12,7 @@ import 'login.dart';
 class GiveAnswer extends StatefulWidget {
 
   final String questionKey;
-  GiveAnswer({Key  key, this.questionKey}):super(key:key);
+  GiveAnswer({Key  key, @required this.questionKey}):super(key:key);
 
 
   @override
@@ -91,9 +92,14 @@ class _GiveAnswerState extends State<GiveAnswer> {
                             backgroundColor: Colors.black,
                             child: profileImage(),
                           ),
-                          Text(
-                            userName!= null? "  " + userName:(" " + question.user),
-                            style: TextStyle(color: Colors.black),
+                          GestureDetector(
+                            onTap: (){
+                              goToProfile(question.user);
+                            },
+                            child: Text(
+                              userName!= null? "  " + userName:(" " + question.user),
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ],
                       )
@@ -490,5 +496,12 @@ class _GiveAnswerState extends State<GiveAnswer> {
       addAnswer = false;
      
     }
+  }
+  void goToProfile(String key){
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new ProfilePage(questionUserKey: key);
+        });
+    Navigator.of(context).push(router);
   }
 }
