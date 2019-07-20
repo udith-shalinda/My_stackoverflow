@@ -168,7 +168,6 @@ class ProfilePageState extends State<ProfilePage> {
 
   _getUserDetails(Event event) {
     if (event.snapshot.key == widget.questionUserKey) {
-      print(widget.questionUserKey);
       setState(() {
         user = User.fromSnapshot(event.snapshot);
         if(event.snapshot.value['myQuestionList'] != null){

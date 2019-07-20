@@ -507,7 +507,6 @@ class _HomeState extends State<Home> {
     Navigator.of(context).push(router);
   }
   void showQuestion(String key){
-    print("key is "+key);
     var router = new MaterialPageRoute(
         builder: (BuildContext context){
           return new GiveAnswer(questionKey: key);

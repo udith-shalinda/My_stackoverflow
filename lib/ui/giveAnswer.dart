@@ -232,7 +232,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
     });
   }
   Widget profileImage(){
-     if(profileLink != null ){
+     if(profileLink != null && profileLink != ""){
         return Container(
               width: 135.0,
               height: 190.0,
@@ -249,7 +249,7 @@ class _GiveAnswerState extends State<GiveAnswer> {
      }else{
        return Icon(
          Icons.person_outline,
-         size: 55,
+         size: 25,
          color: Colors.white,
          );
      }
