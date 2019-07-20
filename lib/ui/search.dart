@@ -24,16 +24,15 @@ class SearchState extends State<Search> {
   var searchKey = new TextEditingController();
   String filter;
   List<Question> questionList = new List();
+  int searchResultCount =0;
   
   
 
   @override
   void initState() {
     super.initState();
-    searchKey.text = "";
     databaseReference = database.reference().child("Questions");
     databaseReference.onChildAdded.listen(setQuestions);
-    // filter = "";
   }
 
   @override
@@ -57,12 +56,13 @@ class SearchState extends State<Search> {
             child: TextField(
               controller: searchKey,
               decoration: InputDecoration(
+                fillColor: Colors.white,
               suffixIcon:IconButton(
                 icon: Icon(Icons.search),
                 color: Colors.white,
                 onPressed: searchButtonPressed,
                 ),
-                hintText: "Enter the Name",
+                hintText: "Enter the search key",
                 hintStyle: TextStyle(
                   color: Colors.white,
                 ),
@@ -76,6 +76,7 @@ class SearchState extends State<Search> {
           ),
           //start of the result
           resultBody(),
+          searchResultCount == 0 ? Text("no result found") : Container(),
         ],
 
       ),
@@ -95,7 +96,11 @@ class SearchState extends State<Search> {
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int index) {
                 return  questionList[index].question.contains(filter) || questionList[index].description.contains(filter) ? ListTile(
-                  leading: Icon(Icons.message),
+                  leading: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Colors.white,
+                          child: new Text(index.toString()),
+                        ),
                   title: Text(
                     questionList[index].question,
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -115,11 +120,14 @@ class SearchState extends State<Search> {
  
  
   Widget resultBody(){
-    if(filter != null){
+    if(filter != null && filter != ''){
       return testSearchResult();
     }else{
       return Center(
-        child: Text("Search a question"),
+        child: Text(
+          "Search a question",
+          style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
         );
     }
   }
