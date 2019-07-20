@@ -14,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'AddQuestion.dart';
 import 'giveAnswer.dart';
 import 'login.dart';
+import 'search.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -148,7 +149,7 @@ class _HomeState extends State<Home> {
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.search),
-                    onPressed: (){},
+                    onPressed: pressSearch,
                   ),
                 ],
               ),
@@ -522,6 +523,13 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(builder: (context) => Login()),
             (Route<dynamic> route) => false,
     );
+  }
+  void pressSearch(){
+    var router = new MaterialPageRoute(
+        builder: (BuildContext context){
+          return new Search();
+        });
+    Navigator.of(context).push(router);
   }
 
 }
