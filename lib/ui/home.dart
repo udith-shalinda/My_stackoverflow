@@ -393,7 +393,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Text(
-            snapshot.value['question'].toString(),
+            snapshot.value['description'].toString(),
             style: TextStyle(color: Colors.blueGrey, fontSize: 15),
           ),
         ],
