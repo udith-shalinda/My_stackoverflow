@@ -99,7 +99,7 @@ class SearchState extends State<Search> {
                   leading: CircleAvatar(
                           radius: 30.0,
                           backgroundColor: Colors.white,
-                          child: new Text(index.toString()),
+                          child: new Text(questionList[index].votes.toString()),
                         ),
                   title: Text(
                     questionList[index].question,
